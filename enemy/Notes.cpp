@@ -35,12 +35,12 @@ void Notes::Update() {
 }
 
 void Notes::OnCollision() {
-	isDead_ = true;
-	//isTrigger_ = true;
+	//isDead_ = true;
+	isTrigger_ = true;
 }
 void Notes::NotCollision() {
-	// isDead_ = true;
-	//isTrigger_ = false;
+	//isDead_ = true;
+	isTrigger_ = false;
 }
 
 void Notes::deleteNotes()

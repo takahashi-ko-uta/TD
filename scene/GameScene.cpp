@@ -275,50 +275,37 @@ void GameScene::TriggerJudge()
 {
 	
 	bool playerTrigger = false;
-	bool bulletTrigger = false;
-
-	bool successTrigger = false;
+	bool notesTrigger = false;
+	//bool inNotesTrigger = false;
+	
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<InNotes>>& enemyBullets = enemy_->GetInNotes();
 
 	playerTrigger = player_->GetTrigger();
 	for (const std::unique_ptr<InNotes>& bullet : enemyBullets) {
 		//敵弾の座標
-		bulletTrigger = bullet->GetTrigger();
+		notesTrigger = bullet->GetTrigger();
 		
-		/*if (playerTrigger == true && bulletTrigger == true) {
-			judge_success = judge_success + 1;
-		}
-		else if (playerTrigger != true || bulletTrigger != true)
-		{
-			judge_failure = judge_failure + 1;
-		}*/
+		
 
-		if(bulletTrigger == true)
+		if(notesTrigger == true)
 		{
 			if(playerTrigger == true)
 			{
 				judge_success = judge_success + 1;
-				successTrigger = true;
-				//bullet->deleteNotes();
-			}
-			else
-			{
-				successTrigger = false;
 			}
 		}
-		else if(bulletTrigger == false)
+		else if(notesTrigger == false)
 		{
-			if (playerTrigger == true && successTrigger == false)
+			if (playerTrigger == true)
 			{
-
 				judge_failure = judge_failure + 1;
 			}
 		}
 
 
 		debugText_->SetPos(50, 90);
-		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, bulletTrigger);
+		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
 	}
 
 	debugText_->SetPos(50, 70);
