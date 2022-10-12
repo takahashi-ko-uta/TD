@@ -160,14 +160,44 @@ void GameScene::CheckAllCollisons()
 	//自弾リストの取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
+	const std::list<std::unique_ptr<Notes>>& notes = enemy_->GetNotes();
+	const std::list<std::unique_ptr<InNotes>>& inNotes = enemy_->GetInNotes();
 
-#pragma region NotesHitと敵弾の当たり判定
+#pragma region NotesHitとnotesの当たり判定
 	//自キャラの座標
 	posA = notesHit_->GetWorldPosition();
 
 	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+	for (const std::unique_ptr<Notes>& bullet : notes) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		const float AR = 1;
+		const float BR = 1;
+
+		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
+		float B = pow((AR + BR), 2);
+
+		if (A <= B) {
+			//自キャラの衝突時コールバックを呼び出す
+			notesHit_->OnCollision();
+			//敵弾の衝突時コールバックを呼び出す
+			bullet->OnCollision();
+		}
+		else
+		{
+			//bullet->NotCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region NotesHitとinNotesの当たり判定
+	//自キャラの座標
+	posA = notesHit_->GetWorldPosition();
+
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<InNotes>& bullet : inNotes) {
 		//敵弾の座標
 		posB = bullet->GetWorldPosition();
 
@@ -189,40 +219,6 @@ void GameScene::CheckAllCollisons()
 		}
 	}
 
-	
-	
-#pragma endregion
-
-#pragma region 自キャラと敵弾の当たり判定
-	{
-		////自キャラの座標
-		// posA = player_->GetWorldPosition();
-
-		////自キャラと敵弾全ての当たり判定
-		// for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//	//敵弾の座標
-		//	posB = bullet->GetWorldPosition();
-
-		//	const float AR = 1;
-		//	const float BR = 1;
-
-		//	float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z),
-		//2); 	float B = pow((AR + BR), 2);
-
-		//	if (A <= B) {
-		//		//自キャラの衝突時コールバックを呼び出す
-		//		player_->OnCollision();
-		//		//敵弾の衝突時コールバックを呼び出す
-		//		bullet->OnCollision();
-		//	} else {
-		//		bullet->NotCollision();
-		//	}
-		//}
-
-		// debugText_->SetPos(50, 90);
-		// debugText_->Printf(
-		//   "posA:(%f,%f,%f) , posB:(%f,%f,%f)", posA.x, posA.y, posA.z, posB.x, posB.y, posB.z);
-	}
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
@@ -249,7 +245,7 @@ void GameScene::CheckAllCollisons()
 
 #pragma region 自弾と敵弾の当たり判定
 	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& enemybullet : enemyBullets) {
+	for (const std::unique_ptr<Notes>& enemybullet : notes) {
 		//自弾と敵キャラ全ての当たり判定
 		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
 			//自弾の座標
@@ -280,21 +276,53 @@ void GameScene::TriggerJudge()
 	
 	bool playerTrigger = false;
 	bool bulletTrigger = false;
+
+	bool successTrigger = false;
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullet();
+	const std::list<std::unique_ptr<InNotes>>& enemyBullets = enemy_->GetInNotes();
 
 	playerTrigger = player_->GetTrigger();
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+	for (const std::unique_ptr<InNotes>& bullet : enemyBullets) {
 		//敵弾の座標
 		bulletTrigger = bullet->GetTrigger();
 		
-		if (playerTrigger == true && bulletTrigger == true) {
-			judge = judge + 1;
+		/*if (playerTrigger == true && bulletTrigger == true) {
+			judge_success = judge_success + 1;
 		}
+		else if (playerTrigger != true || bulletTrigger != true)
+		{
+			judge_failure = judge_failure + 1;
+		}*/
+
+		if(bulletTrigger == true)
+		{
+			if(playerTrigger == true)
+			{
+				judge_success = judge_success + 1;
+				successTrigger = true;
+				//bullet->deleteNotes();
+			}
+			else
+			{
+				successTrigger = false;
+			}
+		}
+		else if(bulletTrigger == false)
+		{
+			if (playerTrigger == true && successTrigger == false)
+			{
+
+				judge_failure = judge_failure + 1;
+			}
+		}
+
+
+		debugText_->SetPos(50, 90);
+		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, bulletTrigger);
 	}
 
 	debugText_->SetPos(50, 70);
-	debugText_->Printf("judge:%d ,PLtri:%d , BLtri:%d", judge,playerTrigger,bulletTrigger);
+	debugText_->Printf("success:%d ,failure:%d", judge_success,judge_failure);
 }
 
 void GameScene::Draw() {

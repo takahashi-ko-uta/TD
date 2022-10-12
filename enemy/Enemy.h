@@ -3,7 +3,8 @@
 #include "DebugCamera.h"
 #include "DebugText.h"
 #include "DirectXCommon.h"
-#include "EnemyBullet.h"
+#include "Notes.h"
+#include "InNotes.h"
 #include "Input.h"
 #include "Model.h"
 #include "SafeDelete.h"
@@ -42,7 +43,8 @@ class Enemy {
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 	//弾リストを取得
-	const std::list<std::unique_ptr<EnemyBullet>>& GetBullet() { return bullets_; }
+	const std::list<std::unique_ptr<Notes>>& GetNotes() { return notes_; }
+	const std::list<std::unique_ptr<InNotes>>& GetInNotes() { return inNotes_; }
 	void Draw(ViewProjection& viewProjection);
 	bool IsDead() const { return isDead_; }
 	//発射間隔
@@ -61,7 +63,8 @@ class Enemy {
 	//フェーズ
 	Phase phase_ = Phase::Approach;
 	//弾
-	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+	std::list<std::unique_ptr<Notes>> notes_;
+	std::list<std::unique_ptr<InNotes>> inNotes_;
 
 	//発射タイマー
 	int32_t FireTimer = 0;

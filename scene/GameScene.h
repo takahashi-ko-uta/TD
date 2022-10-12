@@ -70,8 +70,8 @@ class GameScene {
 	//EnemyBullet* bullet_ = nullptr;
 	NotesHit* notesHit_ = nullptr;
 	bool BLtrigger = false;
-	uint16_t judge = 0;
-	
+	uint16_t judge_success = 0;
+	uint16_t judge_failure = 0;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

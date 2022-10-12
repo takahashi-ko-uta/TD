@@ -15,7 +15,7 @@
 #include <memory>
 
 
-class EnemyBullet;
+class Notes;
 
 class Player {
   public:

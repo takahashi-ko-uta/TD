@@ -36,12 +36,17 @@ void Enemy::ApproachInitalize() {
 
 void Enemy::Update() {
 	Move();
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-		bullet->Update();
+	for (std::unique_ptr<Notes>& notes : notes_) {
+		notes->Update();
+	}
+
+	for (std::unique_ptr<InNotes>& inNotes : inNotes_) {
+		inNotes->Update();
 	}
 
 	//ƒfƒXƒtƒ‰ƒO‚ª—§‚Á‚½’e‚ğ”rœ
-	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) { return bullet->IsDead(); });
+	notes_.remove_if([](std::unique_ptr<Notes>& notes) { return notes->IsDead(); });
+	inNotes_.remove_if([](std::unique_ptr<InNotes>& inNotes) { return inNotes->IsDead(); });
 }
 
 void Enemy::Move() {
@@ -114,11 +119,15 @@ void Enemy::Attack() {
 
 
 	//’e‚ğ¶¬‚µA‰Šú‰»
-	std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
-	newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
+	std::unique_ptr<Notes> notes = std::make_unique<Notes>();
+	notes->Initialize(model_, worldTransforms_.translation_, velocity);
+
+	std::unique_ptr<InNotes> inNotes = std::make_unique<InNotes>();
+	inNotes->Initialize(model_, worldTransforms_.translation_, velocity);
 
 	//’e‚ğ“o˜^‚·‚é
-	bullets_.push_back(std::move(newBullet));
+	notes_.push_back(std::move(notes));
+	inNotes_.push_back(std::move(inNotes));
 }
 
 Vector3 Enemy::GetWorldPosition() {
@@ -139,7 +148,11 @@ void Enemy::OnCollision() {
 void Enemy::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
 	//’e•`‰æ
-	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
-		bullet->Draw(viewProjection);
+	for (std::unique_ptr<Notes>& notes : notes_) {
+		notes->Draw(viewProjection);
 	}
+	for (std::unique_ptr<InNotes>& inNotes : inNotes_) {
+		inNotes->Draw(viewProjection);
+	}
+
 }

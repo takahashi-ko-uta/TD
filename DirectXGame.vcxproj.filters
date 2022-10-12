@@ -75,7 +75,7 @@
     <ClCompile Include="enemy\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="enemy\EnemyBullet.cpp">
+    <ClCompile Include="enemy\Notes.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="affinTransformation.cpp">
@@ -85,6 +85,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Vector3Math.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy\InNotes.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,7 +188,7 @@
     <ClInclude Include="enemy\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="enemy\EnemyBullet.h">
+    <ClInclude Include="enemy\Notes.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="affinTransformation.h">
@@ -195,6 +198,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Vector3Math.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy\InNotes.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
