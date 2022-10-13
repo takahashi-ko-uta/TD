@@ -16,6 +16,7 @@
 #include "player/Player.h"
 #include "enemy/Enemy.h"
 #include "NotesHit.h"
+#include "NotesDelete.h"
 
 #define PI 3.141592
 
@@ -49,6 +50,7 @@ class GameScene {
 	uint32_t textureHandle_PL_ = 0;    // 自機のテクスチャ
 	uint32_t textureHandle_EN_ = 0;    // 敵のテクスチャ
 	uint32_t textureHandle_Black_ = 0; //黒一色のテクスチャ
+	uint32_t textureHandle_Red_ = 0;
 	// 3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
@@ -69,9 +71,13 @@ class GameScene {
 
 	//EnemyBullet* bullet_ = nullptr;
 	NotesHit* notesHit_ = nullptr;
+
+	NotesDelete* notesDelete_ = nullptr;
+
 	bool BLtrigger = false;
 	uint16_t judge_success = 0;
 	uint16_t judge_failure = 0;
+	uint16_t notesCount = 0;//流れてきたノーツを数える
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

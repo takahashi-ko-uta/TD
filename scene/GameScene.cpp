@@ -29,6 +29,7 @@ void GameScene::Initialize() {
 	textureHandle_PL_ = TextureManager::Load("mario.jpg");
 	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
 	textureHandle_Black_ = TextureManager::Load("black.jpg");
+	textureHandle_Red_ = TextureManager::Load("red.png");
 	//モデル生成
 	model_ = Model::Create();
 
@@ -90,6 +91,8 @@ void GameScene::Initialize() {
 	notesHit_ = new NotesHit();
 	notesHit_->Initalize(model_, textureHandle_Black_);
 
+	notesDelete_ = new NotesDelete();
+	notesDelete_->Initalize(model_, textureHandle_Red_);
 
 	//敵キャラの生成
 	enemy_ = new Enemy();
@@ -104,7 +107,6 @@ void GameScene::Initialize() {
 	
 
 }
-
 
 void GameScene::Update()
 {
@@ -137,6 +139,8 @@ void GameScene::Update()
 
 		// notesHitの更新
 		notesHit_->Update();
+
+		notesDelete_->Update();
 
 		//衝突判定
 		CheckAllCollisons();
@@ -186,7 +190,7 @@ void GameScene::CheckAllCollisons()
 		}
 		else
 		{
-			//bullet->NotCollision();
+			bullet->NotCollision();
 		}
 	}
 
@@ -216,6 +220,29 @@ void GameScene::CheckAllCollisons()
 		else
 		{
 			bullet->NotCollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region NotesDeleteとinNotesの当たり判定
+	//自キャラの座標
+	posA = notesDelete_->GetWorldPosition();
+
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<InNotes>& bullet : inNotes) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		const float AR = 1;
+		const float BR = 1;
+
+		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
+		float B = pow((AR + BR), 2);
+
+		if (A <= B) {
+			bullet->deleteNotes();//inNotesを消す
+			notesCount++;
 		}
 	}
 
@@ -276,40 +303,52 @@ void GameScene::TriggerJudge()
 	
 	bool playerTrigger = false;
 	bool notesTrigger = false;
-	//bool inNotesTrigger = false;
+	bool inNotesTrigger = false;
 	
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<InNotes>>& enemyBullets = enemy_->GetInNotes();
+	const std::list<std::unique_ptr<Notes>>& notes = enemy_->GetNotes();
+	const std::list<std::unique_ptr<InNotes>>& inNotes = enemy_->GetInNotes();
 
-	playerTrigger = player_->GetTrigger();
-	for (const std::unique_ptr<InNotes>& bullet : enemyBullets) {
+	playerTrigger = player_->GetTrigger();			//playerクラスからtriggerを取得する
+	for (const std::unique_ptr<Notes>& note : notes) {
 		//敵弾の座標
-		notesTrigger = bullet->GetTrigger();
-		
-		
-
-		if(notesTrigger == true)
+		notesTrigger = note->GetTrigger();			//notesクラスからtriggerを取得する
+		for (const std::unique_ptr<InNotes>& inNote : inNotes)
 		{
-			if(playerTrigger == true)
-			{
-				judge_success = judge_success + 1;
-			}
-		}
-		else if(notesTrigger == false)
-		{
-			if (playerTrigger == true)
-			{
-				judge_failure = judge_failure + 1;
-			}
-		}
+			inNotesTrigger = inNote->GetTrigger();	//inNotesクラスからtriggerを取得する　
 
+#pragma region ノーツの成功失敗判定
+			//notesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
+			//inNotesTriggerはhitNotesに当たっているときはfalse、当たっていないときはtrueを返す
+#pragma region 成功したとき
+			if (notesTrigger == true && inNotesTrigger == false)
+			{
+				if (playerTrigger == true)
+				{
+					judge_success = judge_success + 1;
+				}
+			}
+#pragma endregion
 
-		debugText_->SetPos(50, 90);
-		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
+#pragma region 失敗したとき
+			else if (notesTrigger == false)
+			{
+				if (playerTrigger == true)
+				{
+					judge_failure = judge_failure + 1;
+				}
+			}
+#pragma endregion
+
+#pragma endregion
+
+			debugText_->SetPos(50, 90);
+			debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
+		}
 	}
 
 	debugText_->SetPos(50, 70);
-	debugText_->Printf("success:%d ,failure:%d", judge_success,judge_failure);
+	debugText_->Printf("success:%d ,failure:%d ,notesCount:%d", judge_success,judge_failure,notesCount);
 }
 
 void GameScene::Draw() {
@@ -351,6 +390,8 @@ void GameScene::Draw() {
 
 	//notesHitの更新
 	notesHit_->Draw(viewProjection_);
+
+	notesDelete_->Draw(viewProjection_);
 
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 

@@ -104,6 +104,7 @@
     <ClCompile Include="enemy\InNotes.cpp" />
     <ClCompile Include="enemy\Notes.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NotesDelete.cpp" />
     <ClCompile Include="NotesHit.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="player\playerBullet.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="math\Vector2.h" />
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="NotesDelete.h" />
     <ClInclude Include="NotesHit.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="player\playerBullet.h" />
