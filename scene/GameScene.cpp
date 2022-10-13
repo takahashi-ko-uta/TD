@@ -217,10 +217,7 @@ void GameScene::CheckAllCollisons()
 			//敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
 		}
-		else
-		{
-			bullet->NotCollision();
-		}
+
 	}
 
 #pragma endregion
@@ -311,41 +308,38 @@ void GameScene::TriggerJudge()
 
 	playerTrigger = player_->GetTrigger();			//playerクラスからtriggerを取得する
 	for (const std::unique_ptr<Notes>& note : notes) {
-		//敵弾の座標
 		notesTrigger = note->GetTrigger();			//notesクラスからtriggerを取得する
-		for (const std::unique_ptr<InNotes>& inNote : inNotes)
-		{
-			inNotesTrigger = inNote->GetTrigger();	//inNotesクラスからtriggerを取得する　
 
-#pragma region ノーツの成功失敗判定
-			//notesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
-			//inNotesTriggerはhitNotesに当たっているときはfalse、当たっていないときはtrueを返す
-#pragma region 成功したとき
-			if (notesTrigger == true && inNotesTrigger == false)
-			{
-				if (playerTrigger == true)
-				{
-					judge_success = judge_success + 1;
-				}
-			}
-#pragma endregion
-
+		//notesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
+		//inNotesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
 #pragma region 失敗したとき
-			else if (notesTrigger == false)
+		if (notesTrigger == false)
+		{
+			if (playerTrigger == true)
 			{
-				if (playerTrigger == true)
-				{
-					judge_failure = judge_failure + 1;
-				}
+				judge_failure = judge_failure + 1;
 			}
-#pragma endregion
-
-#pragma endregion
-
-			debugText_->SetPos(50, 90);
-			debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
 		}
+#pragma endregion
+
+		debugText_->SetPos(50, 90);
+		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
 	}
+
+	for (const std::unique_ptr<InNotes>& inNote : inNotes)
+	{
+		inNotesTrigger = inNote->GetTrigger();	//inNotesクラスからtriggerを取得する　
+#pragma region 成功したとき
+		if(inNotesTrigger == true && playerTrigger == true)
+		{
+			judge_success = judge_success + 1;
+			inNote->deleteNotes();
+			notesCount++;
+		}
+#pragma endregion
+	}
+
+
 
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("success:%d ,failure:%d ,notesCount:%d", judge_success,judge_failure,notesCount);

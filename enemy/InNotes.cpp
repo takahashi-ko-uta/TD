@@ -37,11 +37,11 @@ void InNotes::Update() {
 
 void InNotes::OnCollision() {
 	//isDead_ = true;
-	isTrigger_ = false;	//“–‚½‚Á‚Ä‚¢‚é‚Æ‚«‚Ífalse
+	isTrigger_ = true;	
 }
 void InNotes::NotCollision() {
 	// isDead_ = true;
-	isTrigger_ = true;	//“–‚½‚Á‚Ä‚¢‚È‚¢‚Æ‚«‚Ítrue
+	isTrigger_ = false;	
 }
 
 void InNotes::deleteNotes()
