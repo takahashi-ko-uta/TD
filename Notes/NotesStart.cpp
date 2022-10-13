@@ -1,4 +1,4 @@
-#include "enemy/NotesStart.h"
+#include "Notes/NotesStart.h"
 #include "AxisIndicator.h"
 #include "MathUtility.h"
 #include "Notes/NotesHit.h"

@@ -99,18 +99,17 @@
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\TextureManager.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
-    <ClCompile Include="enemy\NotesStart.cpp" />
-    <ClCompile Include="enemy\InNotes.cpp" />
-    <ClCompile Include="enemy\Notes.cpp" />
     <ClCompile Include="GameStage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nameSpace\affinTransformation.cpp" />
     <ClCompile Include="nameSpace\Vector3Math.cpp" />
     <ClCompile Include="NotesEnd.cpp" />
+    <ClCompile Include="Notes\InNotes.cpp" />
+    <ClCompile Include="Notes\Notes.cpp" />
     <ClCompile Include="Notes\NotesDelete.cpp" />
     <ClCompile Include="Notes\NotesHit.cpp" />
+    <ClCompile Include="Notes\NotesStart.cpp" />
     <ClCompile Include="player\Player.cpp" />
-    <ClCompile Include="player\playerBullet.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="Skydome.cpp" />
   </ItemGroup>
@@ -137,9 +136,6 @@
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
     <ClInclude Include="base\WinApp.h" />
-    <ClInclude Include="enemy\NotesStart.h" />
-    <ClInclude Include="enemy\InNotes.h" />
-    <ClInclude Include="enemy\Notes.h" />
     <ClInclude Include="GameStage.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\MathUtility.h" />
@@ -150,10 +146,12 @@
     <ClInclude Include="nameSpace\affinTransformation.h" />
     <ClInclude Include="nameSpace\Vector3Math.h" />
     <ClInclude Include="NotesEnd.h" />
+    <ClInclude Include="Notes\InNotes.h" />
+    <ClInclude Include="Notes\Notes.h" />
     <ClInclude Include="Notes\NotesDelete.h" />
     <ClInclude Include="Notes\NotesHit.h" />
+    <ClInclude Include="Notes\NotesStart.h" />
     <ClInclude Include="player\Player.h" />
-    <ClInclude Include="player\playerBullet.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="Skydome.h" />
   </ItemGroup>

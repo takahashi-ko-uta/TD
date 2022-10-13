@@ -168,6 +168,8 @@ void GameScene::Update()
 		//衝突判定
 		CheckAllCollisons();
 
+		SceneChenge();
+
 		//成功判定
 		TriggerJudge();
 #pragma endregion
@@ -179,8 +181,6 @@ void GameScene::Update()
 		break;
 
 	}
-	
-	
 }
 
 void GameScene::CheckAllCollisons() 
@@ -188,8 +188,6 @@ void GameScene::CheckAllCollisons()
 	//判定対象AとBの座標
 	Vector3 posA, posB;
 
-	//自弾リストの取得
-	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<Notes>>& notes = notesStart_->GetNotes();
 	const std::list<std::unique_ptr<InNotes>>& inNotes = notesStart_->GetInNotes();
@@ -219,7 +217,6 @@ void GameScene::CheckAllCollisons()
 	}
 
 #pragma endregion
-
 
 #pragma region NotesHitとnotesの当たり判定
 	//自キャラの座標
@@ -300,54 +297,6 @@ void GameScene::CheckAllCollisons()
 
 #pragma endregion
 
-#pragma region 自弾と敵キャラの当たり判定
-	posA = notesStart_->GetWorldPosition();
-	//自弾と敵キャラ全ての当たり判定
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//自弾の座標
-		posB = bullet->GetWorldPosition();
-
-		const float AR = 1;
-		const float BR = 1;
-
-		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-		float B = pow((AR + BR), 2);
-
-		if (A <= B) {
-			//自キャラの衝突時コールバックを呼び出す
-			notesStart_->OnCollision();
-			//敵弾の衝突時コールバックを呼び出す
-			bullet->OnCollision();
-		}
-	}
-#pragma endregion
-
-#pragma region 自弾と敵弾の当たり判定
-	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<Notes>& enemybullet : notes) {
-		//自弾と敵キャラ全ての当たり判定
-		for (const std::unique_ptr<PlayerBullet>& playerbullet : playerBullets) {
-			//自弾の座標
-			posA = playerbullet->GetWorldPosition();
-			//自弾の座標
-			posB = enemybullet->GetWorldPosition();
-
-			const float AR = 1;
-			const float BR = 1;
-
-			float A =
-			  pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
-			float B = pow((AR + BR), 2);
-
-			if (A <= B) {
-				//自キャラの衝突時コールバックを呼び出す
-				enemybullet->OnCollision();
-				//敵弾の衝突時コールバックを呼び出す
-				playerbullet->OnCollision();
-			}
-		}
-	}
-#pragma endregion
 }
 
 void GameScene::TriggerJudge() 
@@ -411,6 +360,50 @@ void GameScene::TriggerJudge()
 
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("success:%d ,failure:%d ,notesCount:%d", judge_success,judge_failure,notesCount);
+}
+
+void GameScene::SceneChenge()
+{
+	if(input_->PushKey(DIK_1))//仮に[1]を押したとき
+	{
+		upFlag = 1;
+	}
+	if (viewProjection_.target.y <= 90 && upFlag == 1)//視点を上げる
+	{
+		move = { 0, kTargetSpeed, 0 };
+		//viewProjection_.target.y++;
+		viewProjection_.target.y += move.y;
+		if (viewProjection_.target.y >= 90)//真上を向いたら、下げるフェーズに移行
+		{
+			upFlag = 0;
+			downFlag = 1;
+			//---------敵のウェーブを変えるなら多分ここ----------//
+		}
+	}
+	if (viewProjection_.target.y >= 0 && downFlag == 1)//視点を下げる
+	{
+		move = { 0, -kTargetSpeed, 0 };
+		viewProjection_.target.y += move.y;
+		if (viewProjection_.target.y <= 0)//視点が元の位置(viewProjection_.target.y = 0のとき)に戻ったら下げるのを止める
+		{
+			downFlag = 0;
+		}
+	}
+	//注視点移動
+	/*viewProjection_.target.x += move.x;
+	viewProjection_.target.y += move.y;
+	viewProjection_.target.z += move.z;*/
+
+	//行列の再計算
+	viewProjection_.UpdateMatrix();
+	//デバック用表示
+	debugText_->SetPos(50, 90);
+	debugText_->Printf(
+		"target:(%f,%f,%f)", viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
+
+	debugText_->SetPos(50, 110);
+	debugText_->Printf("upFlag:%d , downFlag:%d", upFlag,downFlag);
+
 }
 
 void GameScene::Draw() {

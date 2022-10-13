@@ -14,12 +14,14 @@
 
 #include "nameSpace/affinTransformation.h"
 #include "player/Player.h"
-#include "enemy/NotesStart.h"
+#include "Notes/NotesStart.h"
 #include "Notes/NotesHit.h"
 #include "Notes/NotesDelete.h"
 
 #include "NotesEnd.h"
 #include "Skydome.h"
+#include <DirectXTex.h>
+
 
 #define PI 3.141592
 
@@ -39,6 +41,7 @@ class GameScene {
 	void Update();
 	void CheckAllCollisons();
 	void TriggerJudge();//成功判定
+	void SceneChenge();
 
 	void Draw();
 
@@ -48,7 +51,7 @@ class GameScene {
 	DebugText* debugText_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	int scene;
+	
 	//テクスチャハンドル
 	uint32_t textureHandle_PL_ = 0;    // 自機のテクスチャ
 	uint32_t textureHandle_EN_ = 0;    // 敵のテクスチャ
@@ -100,8 +103,17 @@ class GameScene {
 	/// ゲームシーン用
 	/// </summary>
 	uint32_t titlePic[1] = {};
-	Sprite* title[1];
-	int titlenum;
-
+	Sprite* title[1] = {};
+	int titlenum = 0;
+	uint16_t scene = 0;
 	uint16_t soundkeep = 0;
+
+	//注視点の移動ベクトル
+	DirectX::XMFLOAT3 move = { 0, 0, 0 };
+	//注視点の移動速度
+	const float kTargetSpeed = 0.5f;
+
+	uint16_t upFlag = 0;
+	uint16_t downFlag = 0;
+
 };

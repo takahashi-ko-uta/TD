@@ -3,7 +3,7 @@
 #include "MathUtility.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
-#include "affinTransformation.h"
+#include "nameSpace/affinTransformation.h"
 #include <cassert>
 #include <random>
 
@@ -30,13 +30,6 @@ void Player::Update() {
 	Move();   //移動処理
 	Rotate(); //旋回処理
 	Attack(); //攻撃処理
-	//弾更新
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Update();
-	}
-
-	//デスフラグが立った弾を排除
-	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) { return bullet->IsDead(); });
 }
 
 void Player::Move() {
@@ -91,41 +84,6 @@ void Player::Rotate() {
 }
 
 void Player::Attack() {
-	{
-		// if (input_->PushKey(DIK_SPACE)) {
-		//	//弾の速度
-		//	const float kBulletSpeed = 1.0f;
-		//	Vector3 velocity(0, 0, kBulletSpeed);
-		//	//速度ベクトルを自機の向きに合わせて回転させる
-		//	// affinTransformation::VecMat(velocity, worldTransforms_);
-
-		//	velocity.x = (velocity.x * worldTransforms_.matWorld_.m[0][0]) +
-		//	             (velocity.y * worldTransforms_.matWorld_.m[1][0]) +
-		//	             (velocity.z * worldTransforms_.matWorld_.m[2][0]) +
-		//	             (0 * worldTransforms_.matWorld_.m[3][0]);
-
-		//	velocity.y = (velocity.x * worldTransforms_.matWorld_.m[0][1]) +
-		//	             (velocity.y * worldTransforms_.matWorld_.m[1][1]) +
-		//	             (velocity.z * worldTransforms_.matWorld_.m[2][1]) +
-		//	             (0 * worldTransforms_.matWorld_.m[3][1]);
-
-		//	velocity.z = (velocity.x * worldTransforms_.matWorld_.m[0][2]) +
-		//	             (velocity.y * worldTransforms_.matWorld_.m[1][2]) +
-		//	             (velocity.z * worldTransforms_.matWorld_.m[2][2]) +
-		//	             (0 * worldTransforms_.matWorld_.m[3][2]);
-
-		//	//デバック
-		//	debugText_->SetPos(50, 70);
-		//	debugText_->Printf("velocity:(%f,%f,%f)", velocity.x, velocity.y, velocity.z);
-
-		//	//弾を生成し、初期化
-		//	std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		//	newBullet->Initialize(model_, worldTransforms_.translation_, velocity);
-
-		//	//弾を登録する
-		//	bullets_.push_back(std::move(newBullet));
-		//}
-	}
 
 	 if (input_->TriggerKey(DIK_SPACE)) 
 	 {
@@ -162,10 +120,5 @@ void Player::Draw(ViewProjection& viewProjection) {
 	else //押していない時
 	{
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_blue);
-	}
-
-	//弾描画
-	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
-		bullet->Draw(viewProjection);
 	}
 }
