@@ -22,6 +22,7 @@
 #include "Skydome.h"
 #include <DirectXTex.h>
 
+#include "enemy/Enemy.h"
 
 #define PI 3.141592
 
@@ -67,6 +68,8 @@ class GameScene {
 
 	// 3Dモデル
 	Model* model_ = nullptr;
+	Model* modelSkydome_ = nullptr;
+	Model* modelStage_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
 	WorldTransform worldTransforms_[100];
 	//ビュープロジェクション
@@ -80,19 +83,20 @@ class GameScene {
 	//自キャラ
 	Player* player_ = nullptr;
 
-	//敵キャラ
+	//ノーツの出発点、終着点
 	NotesStart* notesStart_ = nullptr;
 	NotesEnd* notesEnd_ = nullptr;
 
-	//EnemyBullet* bullet_ = nullptr;
+	//ノーツの成功失敗判定
 	NotesHit* notesHit_ = nullptr;
 
+	//ノーツを消すやつ
 	NotesDelete* notesDelete_ = nullptr;
 
-	//3Dモデル
-	Model* modelSkydome_ = nullptr;
-	Model* modelStage_ = nullptr;
+	//敵キャラ
+	Enemy* enemy_ = nullptr;
 
+	//スカイドーム
 	Skydome* skydome_ = nullptr;
 
 	bool BLtrigger = false;
@@ -115,5 +119,7 @@ class GameScene {
 
 	uint16_t upFlag = 0;
 	uint16_t downFlag = 0;
+
+	uint16_t enemyNumber = 1;//仮に3まで   敵の選択
 
 };

@@ -31,17 +31,18 @@ void GameScene::Initialize() {
 	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
 	textureHandle_Black_ = TextureManager::Load("black.jpg");
 	textureHandle_Red_ = TextureManager::Load("red.png");
+	//タイトル用テクスチャ
+	titlePic[0] = TextureManager::Load("title1.png");
+	title[0] = Sprite::Create(titlePic[0], { 0, 0 });
 	//サウンドを読み込む
 	soundDataHandle_ = audio_->LoadWave("u002.wav");
 	soundDataHandle2_ = audio_->LoadWave("mokugyo.wav");
-
-	
 
 	//モデル生成
 	model_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	
-
+#pragma region 乱数生成
 	//乱数シード生成器
 	std::random_device seed_gen;
 	//メルセンヌ・ツイスターの乱数エンジン
@@ -60,23 +61,18 @@ void GameScene::Initialize() {
 		float rTransY = dist(engine);
 		float rTransZ = dist(engine);
 		// X,Y,Z方向のスケーリング
-		worldTransform.scale_ = {1, 1, 1};
+		worldTransform.scale_ = { 1, 1, 1 };
 		// X,Y,Z方向の回転
-		worldTransform.rotation_ = {rRot, rRot, rRot};
+		worldTransform.rotation_ = { rRot, rRot, rRot };
 		// X,Y,Z方向の平行移動
-		worldTransform.translation_ = {rTransX, rTransY, rTransZ};
+		worldTransform.translation_ = { rTransX, rTransY, rTransZ };
 
 		affinTransformation::Transfer(worldTransform);
 		//行列の転送
 		worldTransform.TransferMatrix();
-
-		scene = 0;
-		//タイトル用
-		titlePic[0] = TextureManager::Load("title1.png");
-		title[0] = Sprite::Create(titlePic[0], {0, 0});
 	}
+#pragma endregion
 	
-
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	//デバックカメラの生成
@@ -91,32 +87,38 @@ void GameScene::Initialize() {
 	
 	Vector3 ten_move[8];
 
-	//自キャラの生成
+#pragma region 各クラスの生成と初期化
+	//自キャラの生成と初期化
 	player_ = new Player();
-	//自キャラの初期化
 	player_->Initalize(model_,textureHandle_PL_);
 
-	//ノーツの当たり判定取るやつ
+	//敵キャラの生成と初期化
+	enemy_ = new Enemy();
+	enemy_->Initalize(model_);
+
+	//ノーツの当たり判定取るやつ生成と初期化
 	notesHit_ = new NotesHit();
 	notesHit_->Initalize(model_, textureHandle_Black_);
 
+	//InNotesを消すやつの生成と初期化
 	notesDelete_ = new NotesDelete();
 	notesDelete_->Initalize(model_, textureHandle_Red_);
 
-	//敵キャラの生成
+	//ノーツの出発点の生成と初期化
 	notesStart_ = new NotesStart();
 	notesStart_->Initalize(model_, textureHandle_EN_);
-
-	notesEnd_ = new NotesEnd();
-	notesEnd_->Initalize(model_, textureHandle_EN_);
-
-	//敵キャラに自キャラのアドレスを渡す
+	//ノーツの出発点にアドレスを渡す
 	notesStart_->SetPlayer(player_);
 	notesStart_->SetNotesHit(notesHit_);
 
+	//ノーツの出発点の生成と初期化
+	notesEnd_ = new NotesEnd();
+	notesEnd_->Initalize(model_, textureHandle_EN_);
+
+	//スカイドームの生成と初期化
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
-	
+#pragma endregion
 
 	bgmHandle_ = audio_->PlayWave(soundDataHandle_, true, 0.1f);
 	bgmHandle2_ = audio_->PlayWave(soundDataHandle2_, true, 0.1f);
@@ -145,7 +147,7 @@ void GameScene::Update()
 
 		if (soundkeep == 0)
 		{
-			audio_->PlayWave(soundDataHandle2_, true, 0.1f);
+			audio_->PlayWave(soundDataHandle2_, true, 0.5f);
 			soundkeep = 1;
 		}
 
@@ -156,13 +158,21 @@ void GameScene::Update()
 		player_->Update();
 
 		//敵キャラの更新
+		enemy_->Update();
+
+		//ノーツの出発点の更新
 		notesStart_->Update();
+
+		//ノーツの終着点の更新
 		notesEnd_->Update();
+
 		// notesHitの更新
 		notesHit_->Update();
 
+		//InNotesを消すやつの更新
 		notesDelete_->Update();
 
+		//スカイドームの更新
 		skydome_->Update();
 
 		//衝突判定
@@ -377,7 +387,17 @@ void GameScene::SceneChenge()
 		{
 			upFlag = 0;
 			downFlag = 1;
-			//---------敵のウェーブを変えるなら多分ここ----------//
+#pragma region 敵の選択
+
+			//敵の数が(仮に)3つのため1~3で回す
+			enemyNumber++;
+			if(enemyNumber == 4)
+			{
+				enemyNumber = 1;
+			}
+			enemy_->SetEnemyNumber(enemyNumber);
+
+#pragma endregion
 		}
 	}
 	if (viewProjection_.target.y >= 0 && downFlag == 1)//視点を下げる
@@ -442,10 +462,12 @@ void GameScene::Draw() {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
-	//敵キャラの描画
+	enemy_->Draw(viewProjection_);
+
 	notesStart_->Draw(viewProjection_);
+
 	notesEnd_->Draw(viewProjection_);
-	//notesHitの更新
+
 	notesHit_->Draw(viewProjection_);
 
 	notesDelete_->Draw(viewProjection_);
