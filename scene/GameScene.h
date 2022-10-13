@@ -12,11 +12,11 @@
 #include "DebugCamera.h"
 #include <math.h>
 
-#include "affinTransformation.h"
+#include "nameSpace/affinTransformation.h"
 #include "player/Player.h"
-#include "enemy/Enemy.h"
-#include "NotesHit.h"
-#include "NotesDelete.h"
+#include "enemy/NotesStart.h"
+#include "Notes/NotesHit.h"
+#include "Notes/NotesDelete.h"
 
 
 #include "Skydome.h"
@@ -78,7 +78,7 @@ class GameScene {
 	Player* player_ = nullptr;
 
 	//敵キャラ
-	Enemy* enemy_ = nullptr;
+	NotesStart* enemy_ = nullptr;
 
 	//EnemyBullet* bullet_ = nullptr;
 	NotesHit* notesHit_ = nullptr;

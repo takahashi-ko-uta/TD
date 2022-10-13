@@ -3,7 +3,7 @@
 #include "MathUtility.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
-#include "affinTransformation.h"
+#include "nameSpace/affinTransformation.h"
 #include <cassert>
 #include <random>
 

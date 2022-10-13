@@ -1,16 +1,16 @@
-#include "enemy/Enemy.h"
+#include "enemy/NotesStart.h"
 #include "AxisIndicator.h"
 #include "MathUtility.h"
-#include "NotesHit.h"
+#include "Notes/NotesHit.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
-#include "affinTransformation.h"
+#include "nameSpace/affinTransformation.h"
 #include "player/Player.h"
 #include <cassert>
 #include <random>
 
 
-void Enemy::Initalize(Model* model, uint32_t textureHandle) {
+void NotesStart::Initalize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -29,12 +29,12 @@ void Enemy::Initalize(Model* model, uint32_t textureHandle) {
 	worldTransforms_.translation_ = Vector3(20.0f, -10.0f, 0.0f);
 }
 
-void Enemy::ApproachInitalize() {
+void NotesStart::ApproachInitalize() {
 	//発射タイマー初期化
 	FireTimer = kFireInterval;
 }
 
-void Enemy::Update() {
+void NotesStart::Update() {
 	Move();
 	for (std::unique_ptr<Notes>& notes : notes_) {
 		notes->Update();
@@ -49,7 +49,7 @@ void Enemy::Update() {
 	inNotes_.remove_if([](std::unique_ptr<InNotes>& inNotes) { return inNotes->IsDead(); });
 }
 
-void Enemy::Move() {
+void NotesStart::Move() {
 	Vector3 move = {0, 0, 0};
 	switch (phase_) {
 	case Phase::Approach:
@@ -82,7 +82,7 @@ void Enemy::Move() {
 	worldTransforms_.TransferMatrix();
 }
 
-void Enemy::Attack() {
+void NotesStart::Attack() {
 	assert(notesHit_);
 	//assert(player_);
 
@@ -130,7 +130,7 @@ void Enemy::Attack() {
 	inNotes_.push_back(std::move(inNotes));
 }
 
-Vector3 Enemy::GetWorldPosition() {
+Vector3 NotesStart::GetWorldPosition() {
 	//ワールド座標を入れる変数
 	Vector3 worldPos;
 	//ワールド行列の平行移動成分を取得
@@ -141,11 +141,11 @@ Vector3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 
-void Enemy::OnCollision() {
+void NotesStart::OnCollision() {
 	//何もしない
 }
 
-void Enemy::Draw(ViewProjection& viewProjection) {
+void NotesStart::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransforms_, viewProjection, textureHandle_);
 	//弾描画
 	for (std::unique_ptr<Notes>& notes : notes_) {

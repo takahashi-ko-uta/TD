@@ -6,7 +6,7 @@
 #include "MathUtility.h"
 #include <random>
 
-#include "affinTransformation.h"
+#include "nameSpace/affinTransformation.h"
 
 GameScene::GameScene() {}
 
@@ -103,7 +103,7 @@ void GameScene::Initialize() {
 	notesDelete_->Initalize(model_, textureHandle_Red_);
 
 	//敵キャラの生成
-	enemy_ = new Enemy();
+	enemy_ = new NotesStart();
 	//bullet_ = new EnemyBullet();
 	//敵キャラの初期化
 	enemy_->Initalize(model_, textureHandle_EN_);

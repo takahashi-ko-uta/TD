@@ -9,7 +9,7 @@
 #include "Model.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
-#include "Vector3Math.h"
+#include "nameSpace/Vector3Math.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <list>
@@ -27,7 +27,7 @@ class Player;
 
 class NotesHit;
 
-class Enemy {
+class NotesStart {
   public:
 	void Initalize(Model* model, uint32_t textureHandle);
 	void ApproachInitalize();
