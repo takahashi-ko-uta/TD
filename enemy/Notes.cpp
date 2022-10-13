@@ -61,9 +61,9 @@ Vector3 Notes::GetWorldPosition() {
 }
 
 void Notes::Draw(const ViewProjection& viewProjection) {
-	/*if (isTrigger_ == false) {
+	if (isTrigger_ == false) {
 		model_->Draw(worldTransform_, viewProjection, textureHandle_red);
 	} else {
 		model_->Draw(worldTransform_, viewProjection, textureHandle_blue);
-	}*/
+	}
 }

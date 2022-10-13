@@ -17,6 +17,7 @@ GameScene::~GameScene()
 	delete player_;
 	delete enemy_;
 	delete notesHit_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -30,8 +31,15 @@ void GameScene::Initialize() {
 	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
 	textureHandle_Black_ = TextureManager::Load("black.jpg");
 	textureHandle_Red_ = TextureManager::Load("red.png");
+	//サウンドを読み込む
+	soundDataHandle_ = audio_->LoadWave("u002.wav");
+	soundDataHandle2_ = audio_->LoadWave("mokugyo.wav");
+
+	
+
 	//モデル生成
 	model_ = Model::Create();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 
 	//乱数シード生成器
 	std::random_device seed_gen;
@@ -104,8 +112,12 @@ void GameScene::Initialize() {
 	enemy_->SetPlayer(player_);
 	enemy_->SetNotesHit(notesHit_);
 
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_);
 	
 
+	bgmHandle_ = audio_->PlayWave(soundDataHandle_, true, 0.1f);
+	bgmHandle2_ = audio_->PlayWave(soundDataHandle2_, true, 0.1f);
 }
 
 void GameScene::Update()
@@ -116,20 +128,31 @@ void GameScene::Update()
 
 	
 	
-	if (scene == 0) { //タイトル
-	}
-	if (input_->TriggerKey(DIK_SPACE)) {
-		scene = 1;
-	}
 
 	switch (scene) {
 	case 0://タイトル
+		audio_->StopWave(soundDataHandle2_);
+
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = 1;
 		}
 		break;
 
 	case 1://ゲーム
+		if (input_->TriggerKey(DIK_O)) {
+
+			scene = 2;
+
+		}
+
+		if (soundkeep == 0)
+		{
+			audio_->PlayWave(soundDataHandle2_, true, 0.1f);
+			soundkeep = 1;
+		}
+
+		audio_->StopWave(soundDataHandle_);
+
 #pragma region 各更新処理
 		//自キャラの更新
 		player_->Update();
@@ -142,6 +165,8 @@ void GameScene::Update()
 
 		notesDelete_->Update();
 
+		skydome_->Update();
+
 		//衝突判定
 		CheckAllCollisons();
 
@@ -149,6 +174,10 @@ void GameScene::Update()
 		TriggerJudge();
 #pragma endregion
 		
+		break;
+
+	case 2://エンディング
+
 		break;
 
 	}
@@ -390,6 +419,8 @@ void GameScene::Draw() {
 	/// 
 	//3Dモデル描画
 	
+	
+
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
@@ -400,6 +431,8 @@ void GameScene::Draw() {
 	notesHit_->Draw(viewProjection_);
 
 	notesDelete_->Draw(viewProjection_);
+
+	skydome_->Draw(viewProjection_);
 
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 

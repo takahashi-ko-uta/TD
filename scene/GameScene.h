@@ -18,6 +18,9 @@
 #include "NotesHit.h"
 #include "NotesDelete.h"
 
+
+#include "Skydome.h"
+
 #define PI 3.141592
 
 /// <summary>
@@ -51,6 +54,14 @@ class GameScene {
 	uint32_t textureHandle_EN_ = 0;    // 敵のテクスチャ
 	uint32_t textureHandle_Black_ = 0; //黒一色のテクスチャ
 	uint32_t textureHandle_Red_ = 0;
+	//音声再生ハンドル
+	uint32_t bgmHandle_ = 0;
+	uint32_t bgmHandle2_ = 0;
+
+	//サウンドデータハンドル
+	uint32_t soundDataHandle_ = 0;
+	uint32_t soundDataHandle2_ = 0;
+
 	// 3Dモデル
 	Model* model_ = nullptr;
 	//ワールドトランスフォームビュープロジェクション
@@ -74,6 +85,12 @@ class GameScene {
 
 	NotesDelete* notesDelete_ = nullptr;
 
+	//3Dモデル
+	Model* modelSkydome_ = nullptr;
+
+	Skydome* skydome_ = nullptr;
+
+
 	bool BLtrigger = false;
 	uint16_t judge_success = 0;
 	uint16_t judge_failure = 0;
@@ -84,4 +101,6 @@ class GameScene {
 	uint32_t titlePic[1] = {};
 	Sprite* title[1];
 	int titlenum;
+
+	uint16_t soundkeep = 0;
 };

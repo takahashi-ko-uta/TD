@@ -48,7 +48,7 @@ class Enemy {
 	void Draw(ViewProjection& viewProjection);
 	bool IsDead() const { return isDead_; }
 	//”­ŽËŠÔŠu
-	static const int kFireInterval = 60;
+	static const int kFireInterval = 30;
 
 	
 
