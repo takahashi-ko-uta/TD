@@ -18,7 +18,7 @@
 #include "Notes/NotesHit.h"
 #include "Notes/NotesDelete.h"
 
-#include "NotesEnd.h"
+#include "Notes/NotesEnd.h"
 #include "Skydome.h"
 #include <DirectXTex.h>
 
