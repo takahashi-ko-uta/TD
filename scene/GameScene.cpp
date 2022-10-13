@@ -240,6 +240,7 @@ void GameScene::CheckAllCollisons()
 		if (A <= B) {
 			bullet->deleteNotes();//inNotesを消す
 			notesCount++;
+			judge_failure++;//押し逃してしまっているのでミスカウント
 		}
 	}
 
@@ -301,45 +302,58 @@ void GameScene::TriggerJudge()
 	bool playerTrigger = false;
 	bool notesTrigger = false;
 	bool inNotesTrigger = false;
-	
+	bool failureFlag = false;
+
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<Notes>>& notes = enemy_->GetNotes();
 	const std::list<std::unique_ptr<InNotes>>& inNotes = enemy_->GetInNotes();
 
 	playerTrigger = player_->GetTrigger();			//playerクラスからtriggerを取得する
-	for (const std::unique_ptr<Notes>& note : notes) {
-		notesTrigger = note->GetTrigger();			//notesクラスからtriggerを取得する
 
-		//notesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
-		//inNotesTriggerはhitNotesに当たっているときはtrue、当たっていないときはfalseを返す
-#pragma region 失敗したとき
-		if (notesTrigger == false)
-		{
-			if (playerTrigger == true)
-			{
-				judge_failure = judge_failure + 1;
-			}
-		}
-#pragma endregion
+#pragma region 成功失敗判定
 
-		debugText_->SetPos(50, 90);
-		debugText_->Printf("PLtri:%d ,BLtri:%d", playerTrigger, notesTrigger);
-	}
-
+#pragma region 成功したとき
 	for (const std::unique_ptr<InNotes>& inNote : inNotes)
 	{
 		inNotesTrigger = inNote->GetTrigger();	//inNotesクラスからtriggerを取得する　
-#pragma region 成功したとき
-		if(inNotesTrigger == true && playerTrigger == true)
+		if (inNotesTrigger == true && playerTrigger == true)
 		{
-			judge_success = judge_success + 1;
+			judge_success++;
 			inNote->deleteNotes();
 			notesCount++;
+			if(judge_failure >= 0)
+			{
+				judge_failure--;
+			}
 		}
+	}
 #pragma endregion
+
+#pragma region 失敗したとき
+	for (const std::unique_ptr<Notes>& note : notes) 
+	{
+		notesTrigger = note->GetTrigger();			//notesクラスからtriggerを取得する
+		for (const std::unique_ptr<InNotes>& inNote : inNotes)
+		{
+			inNotesTrigger = inNote->GetTrigger();	//inNotesクラスからtriggerを取得する　
+			if (notesTrigger == false && inNotesTrigger == false && playerTrigger == true)//手前で押したとき
+			{
+				failureFlag = true;
+			}
+			else 
+			{
+				failureFlag = false;
+			}
+		}
 	}
 
+	if(failureFlag == true)
+	{
+		judge_failure++;
+	}
+#pragma endregion 
 
+#pragma endregion
 
 	debugText_->SetPos(50, 70);
 	debugText_->Printf("success:%d ,failure:%d ,notesCount:%d", judge_success,judge_failure,notesCount);

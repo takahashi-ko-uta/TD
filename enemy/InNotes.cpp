@@ -66,6 +66,6 @@ void InNotes::Draw(const ViewProjection& viewProjection) {
 		model_->Draw(worldTransform_, viewProjection, textureHandle_yellow_);
 	}
 	else {
-		model_->Draw(worldTransform_, viewProjection, textureHandle_yellow_);
+		model_->Draw(worldTransform_, viewProjection, textureHandle_red);
 	}
 }
