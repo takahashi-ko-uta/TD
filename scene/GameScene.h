@@ -18,7 +18,7 @@
 #include "Notes/NotesHit.h"
 #include "Notes/NotesDelete.h"
 
-
+#include "NotesEnd.h"
 #include "Skydome.h"
 
 #define PI 3.141592
@@ -78,7 +78,8 @@ class GameScene {
 	Player* player_ = nullptr;
 
 	//敵キャラ
-	NotesStart* enemy_ = nullptr;
+	NotesStart* notesStart_ = nullptr;
+	NotesEnd* notesEnd_ = nullptr;
 
 	//EnemyBullet* bullet_ = nullptr;
 	NotesHit* notesHit_ = nullptr;

@@ -105,6 +105,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nameSpace\affinTransformation.cpp" />
     <ClCompile Include="nameSpace\Vector3Math.cpp" />
+    <ClCompile Include="NotesEnd.cpp" />
     <ClCompile Include="Notes\NotesDelete.cpp" />
     <ClCompile Include="Notes\NotesHit.cpp" />
     <ClCompile Include="player\Player.cpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="nameSpace\affinTransformation.h" />
     <ClInclude Include="nameSpace\Vector3Math.h" />
+    <ClInclude Include="NotesEnd.h" />
     <ClInclude Include="Notes\NotesDelete.h" />
     <ClInclude Include="Notes\NotesHit.h" />
     <ClInclude Include="player\Player.h" />

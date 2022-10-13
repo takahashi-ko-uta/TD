@@ -15,7 +15,7 @@ GameScene::~GameScene()
 	delete model_;
 	delete debugCamera_;
 	delete player_;
-	delete enemy_;
+	delete notesStart_;
 	delete notesHit_;
 	delete modelSkydome_;
 }
@@ -103,14 +103,15 @@ void GameScene::Initialize() {
 	notesDelete_->Initalize(model_, textureHandle_Red_);
 
 	//敵キャラの生成
-	enemy_ = new NotesStart();
-	//bullet_ = new EnemyBullet();
-	//敵キャラの初期化
-	enemy_->Initalize(model_, textureHandle_EN_);
+	notesStart_ = new NotesStart();
+	notesStart_->Initalize(model_, textureHandle_EN_);
+
+	notesEnd_ = new NotesEnd();
+	notesEnd_->Initalize(model_, textureHandle_EN_);
 
 	//敵キャラに自キャラのアドレスを渡す
-	enemy_->SetPlayer(player_);
-	enemy_->SetNotesHit(notesHit_);
+	notesStart_->SetPlayer(player_);
+	notesStart_->SetNotesHit(notesHit_);
 
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
@@ -158,8 +159,8 @@ void GameScene::Update()
 		player_->Update();
 
 		//敵キャラの更新
-		enemy_->Update();
-
+		notesStart_->Update();
+		notesEnd_->Update();
 		// notesHitの更新
 		notesHit_->Update();
 
@@ -193,8 +194,8 @@ void GameScene::CheckAllCollisons()
 	//自弾リストの取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullet();
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<Notes>>& notes = enemy_->GetNotes();
-	const std::list<std::unique_ptr<InNotes>>& inNotes = enemy_->GetInNotes();
+	const std::list<std::unique_ptr<Notes>>& notes = notesStart_->GetNotes();
+	const std::list<std::unique_ptr<InNotes>>& inNotes = notesStart_->GetInNotes();
 
 #pragma region NotesHitとnotesの当たり判定
 	//自キャラの座標
@@ -276,7 +277,7 @@ void GameScene::CheckAllCollisons()
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
-	posA = enemy_->GetWorldPosition();
+	posA = notesStart_->GetWorldPosition();
 	//自弾と敵キャラ全ての当たり判定
 	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
 		//自弾の座標
@@ -290,7 +291,7 @@ void GameScene::CheckAllCollisons()
 
 		if (A <= B) {
 			//自キャラの衝突時コールバックを呼び出す
-			enemy_->OnCollision();
+			notesStart_->OnCollision();
 			//敵弾の衝突時コールバックを呼び出す
 			bullet->OnCollision();
 		}
@@ -334,8 +335,8 @@ void GameScene::TriggerJudge()
 	bool failureFlag = false;
 
 	//敵弾リストの取得
-	const std::list<std::unique_ptr<Notes>>& notes = enemy_->GetNotes();
-	const std::list<std::unique_ptr<InNotes>>& inNotes = enemy_->GetInNotes();
+	const std::list<std::unique_ptr<Notes>>& notes = notesStart_->GetNotes();
+	const std::list<std::unique_ptr<InNotes>>& inNotes = notesStart_->GetInNotes();
 
 	playerTrigger = player_->GetTrigger();			//playerクラスからtriggerを取得する
 
@@ -425,8 +426,8 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	//敵キャラの描画
-	enemy_->Draw(viewProjection_);
-
+	notesStart_->Draw(viewProjection_);
+	notesEnd_->Draw(viewProjection_);
 	//notesHitの更新
 	notesHit_->Draw(viewProjection_);
 
