@@ -40,6 +40,7 @@ void GameScene::Initialize() {
 	//モデル生成
 	model_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	
 
 	//乱数シード生成器
 	std::random_device seed_gen;
@@ -126,10 +127,6 @@ void GameScene::Update()
 	//デバックカメラの更新
 	debugCamera_->Update();
 
-
-	
-	
-
 	switch (scene) {
 	case 0://タイトル
 		audio_->StopWave(soundDataHandle2_);
@@ -196,6 +193,33 @@ void GameScene::CheckAllCollisons()
 	//敵弾リストの取得
 	const std::list<std::unique_ptr<Notes>>& notes = notesStart_->GetNotes();
 	const std::list<std::unique_ptr<InNotes>>& inNotes = notesStart_->GetInNotes();
+
+#pragma region NotesEndとnotesの当たり判定
+	//自キャラの座標
+	posA = notesEnd_->GetWorldPosition();
+
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<Notes>& bullet : notes) {
+		//敵弾の座標
+		posB = bullet->GetWorldPosition();
+
+		const float AR = 1;
+		const float BR = 1;
+
+		float A = pow((posB.x - posA.x), 2) + pow((posB.y - posA.y), 2) + pow((posB.z - posA.z), 2);
+		float B = pow((AR + BR), 2);
+
+		if (A <= B) {
+			//自キャラの衝突時コールバックを呼び出す
+			
+			//敵弾の衝突時コールバックを呼び出す
+			bullet->deleteNotes();
+		}
+
+	}
+
+#pragma endregion
+
 
 #pragma region NotesHitとnotesの当たり判定
 	//自キャラの座標
@@ -434,7 +458,7 @@ void GameScene::Draw() {
 	notesDelete_->Draw(viewProjection_);
 
 	skydome_->Draw(viewProjection_);
-
+	
 	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
 
 	

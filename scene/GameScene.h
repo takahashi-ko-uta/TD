@@ -88,9 +88,9 @@ class GameScene {
 
 	//3Dモデル
 	Model* modelSkydome_ = nullptr;
+	Model* modelStage_ = nullptr;
 
 	Skydome* skydome_ = nullptr;
-
 
 	bool BLtrigger = false;
 	uint16_t judge_success = 0;

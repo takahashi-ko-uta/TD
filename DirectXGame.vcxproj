@@ -102,6 +102,7 @@
     <ClCompile Include="enemy\NotesStart.cpp" />
     <ClCompile Include="enemy\InNotes.cpp" />
     <ClCompile Include="enemy\Notes.cpp" />
+    <ClCompile Include="GameStage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="nameSpace\affinTransformation.cpp" />
     <ClCompile Include="nameSpace\Vector3Math.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="enemy\NotesStart.h" />
     <ClInclude Include="enemy\InNotes.h" />
     <ClInclude Include="enemy\Notes.h" />
+    <ClInclude Include="GameStage.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\MathUtility.h" />
     <ClInclude Include="math\Matrix4.h" />
