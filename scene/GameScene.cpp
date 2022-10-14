@@ -458,7 +458,6 @@ void GameScene::Draw() {
 	//3Dモデル描画
 	
 	
-
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
