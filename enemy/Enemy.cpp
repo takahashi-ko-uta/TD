@@ -33,6 +33,41 @@ void Enemy::Initalize(Model* model) {
 
 void Enemy::Update() {
 	
+	switch (enemyNumber_)
+	{
+#pragma region チュートリアル
+	case 0:
+		
+		break;
+#pragma endregion
+
+#pragma region ステージ１音が消える（仮）
+	case 1:
+		if(input_->PushKey(DIK_2))
+		{
+			soundLevel = 0.0f;
+		}
+		else
+		{
+			soundLevel = 0.5f;
+		}
+
+		break;
+#pragma endregion
+
+#pragma region ステージ２
+	case 2:
+
+		break;
+#pragma endregion
+
+#pragma region ステージ３
+	case 3:
+
+		break;
+#pragma endregion
+	}
+
 }
 
 void Enemy::SetEnemyNumber(uint16_t enemyNumber)
@@ -40,17 +75,25 @@ void Enemy::SetEnemyNumber(uint16_t enemyNumber)
 	enemyNumber_ = enemyNumber;
 }
 
+float Enemy::GetSoundLevel()
+{
+	return soundLevel;
+}
+
 void Enemy::Draw(ViewProjection& viewProjection) {
 	
 	switch (enemyNumber_)
 	{
-	case 1:
+	case 0://チュートリアル
+		model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+		break;
+	case 1://ステージ１
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num1_);
 		break;
-	case 2:
+	case 2://ステージ２
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num2_);
 		break;
-	case 3:
+	case 3://ステージ３
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num3_);
 		break;
 	}

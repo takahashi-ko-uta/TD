@@ -21,6 +21,8 @@ public:
 
 	void SetEnemyNumber(uint16_t enemyNumber);//GameScene‚©‚çenemyNumber‚ğ‚Á‚Ä‚­‚é
 
+	float GetSoundLevel();
+
 	void Draw(ViewProjection& viewProjection);
 	
 private:
@@ -35,4 +37,5 @@ private:
 	uint32_t textureHandle_Num3_ = 0;
 
 	uint16_t enemyNumber_ = 1;//‰¼‚É3‚Ü‚Å
+	float soundLevel = 0.5f;
 };

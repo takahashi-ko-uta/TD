@@ -35,44 +35,13 @@ void GameScene::Initialize() {
 	titlePic[0] = TextureManager::Load("title1.png");
 	title[0] = Sprite::Create(titlePic[0], { 0, 0 });
 	//サウンドを読み込む
-	soundDataHandle_ = audio_->LoadWave("u002.wav");
-	soundDataHandle2_ = audio_->LoadWave("mokugyo.wav");
+	soundDataHandle_ = audio_->LoadWave("u002.wav");	//タイトルのBGM
+	soundDataHandle2_ = audio_->LoadWave("mokugyo.wav");//メトロノーム
 
 	//モデル生成
 	model_ = Model::Create();
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	
-#pragma region 乱数生成
-	//乱数シード生成器
-	std::random_device seed_gen;
-	//メルセンヌ・ツイスターの乱数エンジン
-	std::mt19937_64 engine(seed_gen());
-	//乱数範囲の指定
-	std::uniform_real_distribution<float> dist(-10, 10); // dist(最大値,最小値)
-	//範囲forで全てのワールドトランスフォームを順に処理する
-	for (WorldTransform& worldTransform : worldTransforms_) {
-
-		//ワールドトランスフォームの初期化
-		worldTransform.Initialize();
-
-		//乱数エンジンを渡し、指定範囲からランダムな数値を得る
-		float rRot = dist(engine);
-		float rTransX = dist(engine);
-		float rTransY = dist(engine);
-		float rTransZ = dist(engine);
-		// X,Y,Z方向のスケーリング
-		worldTransform.scale_ = { 1, 1, 1 };
-		// X,Y,Z方向の回転
-		worldTransform.rotation_ = { rRot, rRot, rRot };
-		// X,Y,Z方向の平行移動
-		worldTransform.translation_ = { rTransX, rTransY, rTransZ };
-
-		affinTransformation::Transfer(worldTransform);
-		//行列の転送
-		worldTransform.TransferMatrix();
-	}
-#pragma endregion
-	
+		
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	//デバックカメラの生成
@@ -121,37 +90,34 @@ void GameScene::Initialize() {
 #pragma endregion
 
 	bgmHandle_ = audio_->PlayWave(soundDataHandle_, true, 0.1f);
-	bgmHandle2_ = audio_->PlayWave(soundDataHandle2_, true, 0.1f);
+	//bgmHandle2_ = audio_->PlayWave(soundDataHandle2_, true, 0.1f);
 }
 
 void GameScene::Update()
 {
+	bgmHandle_;
 	//デバックカメラの更新
 	debugCamera_->Update();
 
 	switch (scene) {
+#pragma region タイトル
 	case 0://タイトル
+		
 		audio_->StopWave(soundDataHandle2_);
 
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = 1;
 		}
 		break;
+#pragma endregion
 
+#pragma region ゲーム
 	case 1://ゲーム
 		if (input_->TriggerKey(DIK_O)) {
 
 			scene = 2;
 
 		}
-
-		if (soundkeep == 0)
-		{
-			audio_->PlayWave(soundDataHandle2_, true, 0.5f);
-			soundkeep = 1;
-		}
-
-		audio_->StopWave(soundDataHandle_);
 
 #pragma region 各更新処理
 		//自キャラの更新
@@ -184,11 +150,31 @@ void GameScene::Update()
 		TriggerJudge();
 #pragma endregion
 		
-		break;
+#pragma region 音の処理
+		
+		if (soundkeep == 0)
+		{
+			audio_->StopWave(soundDataHandle_);
+			
+			soundkeep = 1;
+		}
+		Metronome(30, soundDataHandle2_);
 
+		debugText_->SetPos(50, 110);
+		debugText_->Printf("soundLevel:%f", soundLevel);
+		
+#pragma endregion
+
+		break;
+#pragma endregion 
+
+#pragma region エンディング
 	case 2://エンディング
+		audio_->StopWave(soundDataHandle2_);
+
 
 		break;
+#pragma endregion
 
 	}
 }
@@ -374,6 +360,7 @@ void GameScene::TriggerJudge()
 
 void GameScene::SceneChenge()
 {
+	enemy_->SetEnemyNumber(enemyNumber);
 	if(input_->PushKey(DIK_1))//仮に[1]を押したとき
 	{
 		upFlag = 1;
@@ -418,12 +405,28 @@ void GameScene::SceneChenge()
 	viewProjection_.UpdateMatrix();
 	//デバック用表示
 	debugText_->SetPos(50, 90);
-	debugText_->Printf(
-		"target:(%f,%f,%f)", viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
+	debugText_->Printf("enemyNumber:%d", enemyNumber);
 
-	debugText_->SetPos(50, 110);
-	debugText_->Printf("upFlag:%d , downFlag:%d", upFlag,downFlag);
+}
 
+void GameScene::Metronome(float tempo ,uint32_t bgmHandle)
+{
+	soundLevel = enemy_->GetSoundLevel();
+	interval = tempo;
+
+	if (timer >= 0)
+	{
+		timer--;
+		if (timer <= 0)
+		{
+			audio_->PlayWave(soundDataHandle2_, false, soundLevel);
+			timer = interval;
+		}
+	}
+
+	debugText_->SetPos(50, 130);
+	debugText_->Printf("timer:%f", timer);
+	//audio_->PlayWave(bgmHandle, true, 0.5f);
 }
 
 void GameScene::Draw() {

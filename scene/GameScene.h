@@ -43,6 +43,7 @@ class GameScene {
 	void CheckAllCollisons();
 	void TriggerJudge();//成功判定
 	void SceneChenge();
+	void Metronome(float tempo, uint32_t bgmHandle);
 
 	void Draw();
 
@@ -120,6 +121,13 @@ class GameScene {
 	uint16_t upFlag = 0;
 	uint16_t downFlag = 0;
 
-	uint16_t enemyNumber = 1;//仮に3まで   敵の選択
+	uint16_t enemyNumber = 0;//仮に3まで 敵の選択 0...チュートリアル 
+
+	float soundLevel = 0.5f;//0.0f~
+
+
+	float interval = 0;
+	float timer = 0;
+
 
 };
