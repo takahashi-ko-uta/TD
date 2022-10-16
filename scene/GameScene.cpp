@@ -5,7 +5,6 @@
 #include "AxisIndicator.h"
 #include "MathUtility.h"
 #include <random>
-
 #include "nameSpace/affinTransformation.h"
 
 GameScene::GameScene() {}

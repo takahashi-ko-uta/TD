@@ -129,5 +129,6 @@ class GameScene {
 	float interval = 0;
 	float timer = 0;
 
-
+	int i;
+	double a;
 };
