@@ -105,7 +105,7 @@ void GameScene::Update()
 		
 		audio_->StopWave(soundDataHandle2_);
 
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE)) {//シーン切り替え
 			scene = 1;
 		}
 		break;
@@ -113,7 +113,7 @@ void GameScene::Update()
 
 #pragma region ゲーム
 	case 1://ゲーム
-		if (input_->TriggerKey(DIK_O)) {
+		if (input_->TriggerKey(DIK_O)) { //シーン切り替え
 
 			scene = 2;
 
