@@ -32,8 +32,8 @@ void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 
 void NotesDelete::Update() {
 
-	Rotate();	//カメラに合わせて回転
-	Trans();	//カメラに合わせて移動
+	//Rotate();	//カメラに合わせて回転
+	//Trans();	//カメラに合わせて移動
 	
 	//デバック用表示
 	debugText_->SetPos(50, 170);

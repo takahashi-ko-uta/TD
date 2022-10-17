@@ -397,10 +397,21 @@ void GameScene::SceneChenge()
 		}
 	}
 	
-	//注視点移動
-	/*viewProjection_.target.x += move.x;
-	viewProjection_.target.y += move.y;
-	viewProjection_.target.z += move.z;*/
+	//if(input_->PushKey(DIK_T))
+	//{
+	//	//viewProjection_.eye = Vector3(0.0f, 0.0f, 0.0f);
+	//	viewProjection_.target = Vector3(0.0f, 50.0f, 0.1f);
+	//}
+
+	//if(input_->PushKey(DIK_UP))
+	//{
+	//	viewProjection_.eye.z++;
+	//}
+	//if (input_->PushKey(DIK_DOWN))
+	//{
+	//	viewProjection_.eye.z--;
+	//}
+
 
 	//行列の再計算
 	viewProjection_.UpdateMatrix();

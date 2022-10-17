@@ -38,7 +38,6 @@ class GameScene {
 
 	void Initialize();
 	
-
 	void Update();
 	void CheckAllCollisons();
 	void TriggerJudge();//成功判定
