@@ -22,7 +22,8 @@ void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
 	//worldTransforms_.translation_ = Vector3(-4.0f, -10.0f, 50.0f);
-	worldTransforms_.translation_ = Vector3(0.0f, 50.0f, 0.0f);
+	//worldTransforms_.translation_ = Vector3(0.0f, 50.0f, 0.0f);
+	worldTransforms_.translation_ = Vector3(0.0f, 0.0f, 50.0f);
 	worldTransforms_.scale_ = Vector3(2.0f, 1.0f, 1.0f);
 
 	affinTransformation::Transfer(worldTransforms_);
@@ -32,8 +33,8 @@ void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 
 void NotesDelete::Update() {
 
-	//Rotate();	//カメラに合わせて回転
-	//Trans();	//カメラに合わせて移動
+	Rotate();	//カメラに合わせて回転
+	Trans();	//カメラに合わせて移動
 	
 	//デバック用表示
 	debugText_->SetPos(50, 170);
@@ -47,9 +48,10 @@ void NotesDelete::Update() {
 
 void NotesDelete::Rotate() {
 	
-	worldTransforms_.rotation_.x = rotateY_ * PI /180;
+	const float R = 90.0f / 50.0f;
+	float rotY = R * rotateY_;
 
-	
+	worldTransforms_.rotation_.x = -rotY * PI /180;
 
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
@@ -65,23 +67,8 @@ void NotesDelete ::SetRotateY(float rotateY)
 
 void NotesDelete::Trans()
 {
-	const float move = 50.0f / 90.0f;
-	worldTransforms_.translation_.y = move * rotateY_ - 10.0f;
-	worldTransforms_.translation_.z = move * -rotateY_;
-
-	//if(upFlag_ == 1)
-	//{
-	//	//最終的にy = 50, z = -50
-	//	worldTransforms_.translation_.y += move * rotateY_;
-	//	worldTransforms_.translation_.z -= move * rotateY_;
-	//}
-	//else if(downFlag_ == 1)
-	//{
-	//	//処理前はy = 50, z = -50
-	//	//最終的にy = 0, z = 0
-	//	worldTransforms_.translation_.y -= move * rotateY_;
-	//	worldTransforms_.translation_.z += move * rotateY_;
-	//}
+	worldTransforms_.translation_.y = rotateY_;
+	worldTransforms_.translation_.z = -rotateY_ + 50;
 
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新

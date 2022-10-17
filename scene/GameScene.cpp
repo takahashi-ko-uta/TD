@@ -373,7 +373,6 @@ void GameScene::SceneChenge()
 	if (viewProjection_.target.y <= 90 && upFlag == 1)//視点を上げる
 	{
 		move = { 0, kTargetSpeed, -kTargetSpeed };
-		//viewProjection_.target.y++;
 		viewProjection_.target.y += move.y;
 		viewProjection_.target.z += move.z;
 		if (viewProjection_.target.y >= 50)//真上を向いたら、下げるフェーズに移行
@@ -470,7 +469,7 @@ void GameScene::Draw() {
 	
 	
 	//自キャラの描画
-	player_->Draw(viewProjection_);
+	/*player_->Draw(viewProjection_);
 
 	enemy_->Draw(viewProjection_);
 
@@ -478,7 +477,7 @@ void GameScene::Draw() {
 
 	notesEnd_->Draw(viewProjection_);
 
-	notesHit_->Draw(viewProjection_);
+	notesHit_->Draw(viewProjection_);*/
 
 	notesDelete_->Draw(viewProjection_);
 
