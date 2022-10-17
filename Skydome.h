@@ -15,7 +15,7 @@ private:
 	Model* model_ = nullptr;
 	const float size = 5.0f;
 	Vector3 scale = { size,size,size };
-	Vector3 trans = { 0.0f, 0.0f, 0.0f };
+	Vector3 trans = { 0.0f, 0.0f, 50.0f };
 public:
 	void Initialize(Model* model);
 

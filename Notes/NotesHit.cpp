@@ -21,7 +21,7 @@ void NotesHit::Initalize(Model* model, uint32_t textureHandle) {
 
 	//ƒ[ƒ‹ƒh•ÏŠ·‚Ì‰Šú‰»
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(0.0f, -10.0f, 0.0f);
+	worldTransforms_.translation_ = Vector3(0.0f, -10.0f, 50.0f);
 	worldTransforms_.scale_ = Vector3(2.0f, 1.0f, 1.0f);
 }
 

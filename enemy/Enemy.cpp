@@ -25,7 +25,7 @@ void Enemy::Initalize(Model* model) {
 
 	//ƒ[ƒ‹ƒh•ÏŠ·‚Ì‰Šú‰»
 	worldTransforms_.Initialize();
-	worldTransforms_.translation_ = Vector3(0.0f, 0.0f, -5.0f);
+	worldTransforms_.translation_ = Vector3(0.0f, 0.0f, 50.0f);
 	worldTransforms_.scale_ = Vector3(5.0f, 5.0f, 5.0f);
 	affinTransformation::Transfer(worldTransforms_);
 	worldTransforms_.TransferMatrix();

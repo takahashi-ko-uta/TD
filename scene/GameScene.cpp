@@ -43,6 +43,9 @@ void GameScene::Initialize() {
 		
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+	viewProjection_.eye = Vector3(0.0f, 0.0f, 0.0f);
+	viewProjection_.target = Vector3(0.0f, 0.0f, 50.0f);
+	viewProjection_.UpdateMatrix();
 	//デバックカメラの生成
 	debugCamera_ = new DebugCamera(600, 600);
 	//軸方向表示の表示を有効にする
