@@ -21,7 +21,14 @@ public:
 
 	void Rotate();
 
+	void Trans();
+
 	Vector3 GetWorldPosition();
+
+	void SetRotateY(float rotateY); //カメラと一緒に回したいからiewProjection.terget.yから持ってくる
+
+	void SetUpDownFlag(bool upFlag, bool downFlag);
+
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
 
@@ -34,5 +41,10 @@ private:
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
 	uint32_t textureHandle_ = 0;
+
+	float rotateY_ = 0;
+
+	bool upFlag_ = false;
+	bool downFlag_ = false;
 
 };

@@ -145,6 +145,10 @@ void GameScene::Update()
 
 		SceneChenge();
 
+		notesDelete_->SetRotateY(viewProjection_.target.y);
+		notesDelete_->SetUpDownFlag(upFlag, downFlag);
+
+
 		//成功判定
 		TriggerJudge();
 #pragma endregion
@@ -159,9 +163,6 @@ void GameScene::Update()
 		}
 		Metronome(30, soundDataHandle2_);
 
-		debugText_->SetPos(50, 110);
-		debugText_->Printf("soundLevel:%f", soundLevel);
-		
 #pragma endregion
 
 		break;
@@ -395,6 +396,7 @@ void GameScene::SceneChenge()
 			downFlag = 0;
 		}
 	}
+	
 	//注視点移動
 	/*viewProjection_.target.x += move.x;
 	viewProjection_.target.y += move.y;
@@ -405,6 +407,15 @@ void GameScene::SceneChenge()
 	//デバック用表示
 	debugText_->SetPos(50, 90);
 	debugText_->Printf("enemyNumber:%d", enemyNumber);
+	
+	//デバック用表示
+	debugText_->SetPos(50, 110);
+	debugText_->Printf("viewProjection_.eye = (%f, %f, %f)",
+		viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
+	//デバック用表示
+	debugText_->SetPos(50, 130);
+	debugText_->Printf("viewProjection_.terget = (%f, %f, %f)",
+		viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
 
 }
 
@@ -422,10 +433,6 @@ void GameScene::Metronome(float tempo ,uint32_t bgmHandle)
 			timer = interval;
 		}
 	}
-
-	debugText_->SetPos(50, 130);
-	debugText_->Printf("timer:%f", timer);
-	//audio_->PlayWave(bgmHandle, true, 0.5f);
 }
 
 void GameScene::Draw() {
@@ -507,3 +514,4 @@ void GameScene::Draw() {
 #pragma endregion
 	
 }
+

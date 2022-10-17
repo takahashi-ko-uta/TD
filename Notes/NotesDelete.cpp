@@ -6,7 +6,7 @@
 #include "nameSpace/affinTransformation.h"
 #include <cassert>
 #include <random>
-
+#define PI 3.141592
 
 void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -22,28 +22,76 @@ void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
 	worldTransforms_.translation_ = Vector3(-4.0f, -10.0f, 0.0f);
+	//worldTransforms_.translation_ = Vector3(0.0f, 50.0f, 0.0f);
 	worldTransforms_.scale_ = Vector3(2.0f, 1.0f, 1.0f);
+
+	affinTransformation::Transfer(worldTransforms_);
+	//行列更新
+	worldTransforms_.TransferMatrix();
 }
 
 void NotesDelete::Update() {
 
-	Rotate(); //旋回処理
+	Rotate();	//カメラに合わせて回転
+	Trans();	//カメラに合わせて移動
+	
+	//デバック用表示
+	debugText_->SetPos(50, 170);
+	debugText_->Printf("rotation_.x:%f", worldTransforms_.rotation_.x);
+
+	debugText_->SetPos(50, 190);
+	debugText_->Printf("worldTransforms_.translation_=(%f, %f, %f)",
+		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);
 }
 
 
 void NotesDelete::Rotate() {
-	Vector3 RotY = { 0.0f, 0.0f, 0.0f };
-	if (input_->PushKey(DIK_U)) {
-		RotY.y += 0.01f;
-	}
-	else if (input_->PushKey(DIK_I)) {
-		RotY.y -= 0.01f;
-	}
+	
+	worldTransforms_.rotation_.x = rotateY_ * PI /180;
 
-	worldTransforms_.rotation_ += RotY;
+	
+
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
+
+
+}
+
+void NotesDelete ::SetRotateY(float rotateY)
+{
+	rotateY_ = rotateY;
+}
+
+void NotesDelete::Trans()
+{
+	const float move = 50.0f / 90.0f;
+	worldTransforms_.translation_.y = move * rotateY_ - 10.0f;
+	worldTransforms_.translation_.z = move * -rotateY_;
+
+	//if(upFlag_ == 1)
+	//{
+	//	//最終的にy = 50, z = -50
+	//	worldTransforms_.translation_.y += move * rotateY_;
+	//	worldTransforms_.translation_.z -= move * rotateY_;
+	//}
+	//else if(downFlag_ == 1)
+	//{
+	//	//処理前はy = 50, z = -50
+	//	//最終的にy = 0, z = 0
+	//	worldTransforms_.translation_.y -= move * rotateY_;
+	//	worldTransforms_.translation_.z += move * rotateY_;
+	//}
+
+	affinTransformation::Transfer(worldTransforms_);
+	//行列更新
+	worldTransforms_.TransferMatrix();
+}
+
+void NotesDelete::SetUpDownFlag(bool upFlag, bool downFlag)
+{
+	upFlag_ = upFlag;
+	downFlag_ = downFlag;
 }
 
 Vector3 NotesDelete::GetWorldPosition() {

@@ -32,15 +32,7 @@ void NotesEnd::Update() {
 
 
 void NotesEnd::Rotate() {
-	Vector3 RotY = { 0.0f, 0.0f, 0.0f };
-	if (input_->PushKey(DIK_U)) {
-		RotY.y += 0.01f;
-	}
-	else if (input_->PushKey(DIK_I)) {
-		RotY.y -= 0.01f;
-	}
-
-	worldTransforms_.rotation_ += RotY;
+	
 	affinTransformation::Transfer(worldTransforms_);
 	//s—ñXV
 	worldTransforms_.TransferMatrix();
