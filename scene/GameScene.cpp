@@ -44,7 +44,7 @@ void GameScene::Initialize() {
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 	viewProjection_.eye = Vector3(0.0f, 0.0f, 0.0f);
-	viewProjection_.target = Vector3(0.0f, 0.0f, 50.0f);
+	viewProjection_.target = Vector3(0.0f, 0.0f, 50.01f); //target.zは0にすると見えなくなるため0.01追加
 	viewProjection_.UpdateMatrix();
 	//デバックカメラの生成
 	debugCamera_ = new DebugCamera(600, 600);
@@ -363,17 +363,20 @@ void GameScene::TriggerJudge()
 
 void GameScene::SceneChenge()
 {
+	kTargetSpeed = 0.5f;
 	enemy_->SetEnemyNumber(enemyNumber);
 	if(input_->PushKey(DIK_1))//仮に[1]を押したとき
 	{
 		upFlag = 1;
 	}
+
 	if (viewProjection_.target.y <= 90 && upFlag == 1)//視点を上げる
 	{
-		move = { 0, kTargetSpeed, 0 };
+		move = { 0, kTargetSpeed, -kTargetSpeed };
 		//viewProjection_.target.y++;
 		viewProjection_.target.y += move.y;
-		if (viewProjection_.target.y >= 90)//真上を向いたら、下げるフェーズに移行
+		viewProjection_.target.z += move.z;
+		if (viewProjection_.target.y >= 50)//真上を向いたら、下げるフェーズに移行
 		{
 			upFlag = 0;
 			downFlag = 1;
@@ -381,7 +384,7 @@ void GameScene::SceneChenge()
 
 			//敵の数が(仮に)3つのため1~3で回す
 			enemyNumber++;
-			if(enemyNumber == 4)
+			if (enemyNumber == 4)
 			{
 				enemyNumber = 1;
 			}
@@ -392,29 +395,14 @@ void GameScene::SceneChenge()
 	}
 	if (viewProjection_.target.y >= 0 && downFlag == 1)//視点を下げる
 	{
-		move = { 0, -kTargetSpeed, 0 };
+		move = { 0, -kTargetSpeed, +kTargetSpeed };
 		viewProjection_.target.y += move.y;
+		viewProjection_.target.z += move.z;
 		if (viewProjection_.target.y <= 0)//視点が元の位置(viewProjection_.target.y = 0のとき)に戻ったら下げるのを止める
 		{
 			downFlag = 0;
 		}
 	}
-	
-	//if(input_->PushKey(DIK_T))
-	//{
-	//	//viewProjection_.eye = Vector3(0.0f, 0.0f, 0.0f);
-	//	viewProjection_.target = Vector3(0.0f, 50.0f, 0.1f);
-	//}
-
-	//if(input_->PushKey(DIK_UP))
-	//{
-	//	viewProjection_.eye.z++;
-	//}
-	//if (input_->PushKey(DIK_DOWN))
-	//{
-	//	viewProjection_.eye.z--;
-	//}
-
 
 	//行列の再計算
 	viewProjection_.UpdateMatrix();

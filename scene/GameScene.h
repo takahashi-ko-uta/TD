@@ -115,7 +115,7 @@ class GameScene {
 	//注視点の移動ベクトル
 	DirectX::XMFLOAT3 move = { 0, 0, 0 };
 	//注視点の移動速度
-	const float kTargetSpeed = 0.5f;
+	float kTargetSpeed = 0.5f;
 
 	uint16_t upFlag = 0;
 	uint16_t downFlag = 0;
