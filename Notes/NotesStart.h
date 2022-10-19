@@ -38,6 +38,11 @@ class NotesStart {
 	void SetPlayer(Player* player) { player_ = player; }
 	void SetNotesHit(NotesHit* notesHit) { notesHit_ = notesHit; }
 	void Attack();
+
+	void Rotate();
+	void Trans();
+	void SetStopFlag(bool stopFlag);
+
 	//ワールド座標を取得
 	Vector3 GetWorldPosition();
 	// 衝突を検出したら呼び出されるコールバック関数
@@ -74,4 +79,6 @@ class NotesStart {
 
 	//デスフラグ
 	bool isDead_ = false;
+
+	bool stopFlag_ = false;
 };

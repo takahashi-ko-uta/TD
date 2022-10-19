@@ -5,6 +5,7 @@
 #include <d3dx12.h>
 #include <string>
 #include <wrl.h>
+#include <DirectXMath.h>
 
 /// <summary>
 /// マテリアル
@@ -19,6 +20,7 @@ class Material {
 		float pad2;        // パディング
 		Vector3 specular; // スペキュラー係数
 		float alpha;       // アルファ
+		//DirectX::XMFLOAT4 color;
 	};
 
   public: // 静的メンバ関数
@@ -34,6 +36,7 @@ class Material {
 	Vector3 diffuse_;            // ディフューズ影響度
 	Vector3 specular_;           // スペキュラー影響度
 	float alpha_;                 // アルファ
+	//DirectX::XMFLOAT4 color_;
 	std::string textureFilename_; // テクスチャファイル名
 
   public:
@@ -92,6 +95,7 @@ class Material {
 		diffuse_ = {0.0f, 0.0f, 0.0f};
 		specular_ = {0.0f, 0.0f, 0.0f};
 		alpha_ = 1.0f;
+		//color_ = { 1.0f,0.0f,1.0f,1.0f };
 	}
 
 	/// <summary>
@@ -103,4 +107,6 @@ class Material {
 	/// 定数バッファの生成
 	/// </summary>
 	void CreateConstantBuffer();
+
+
 };

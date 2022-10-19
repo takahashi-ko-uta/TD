@@ -39,6 +39,7 @@ void GameScene::Initialize() {
 
 	//モデル生成
 	model_ = Model::Create();
+	//model_->SetMaterialParameta(0.1f);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 		
 	//ビュープロジェクションの初期化
@@ -147,10 +148,6 @@ void GameScene::Update()
 		CheckAllCollisons();
 
 		SceneChenge();
-
-		notesDelete_->SetRotateY(viewProjection_.target.y);
-		notesDelete_->SetUpDownFlag(upFlag, downFlag);
-
 
 		//成功判定
 		TriggerJudge();
@@ -363,6 +360,10 @@ void GameScene::TriggerJudge()
 
 void GameScene::SceneChenge()
 {
+	//------「視点を上げる」→「視点を止める」→「視点を下げる」-----//
+	//「視点を上げる」...視点を真上まで上げてEnemyNumberを変える
+	//「視点を止める」...視点を真上の状態で止める(timerで管理)
+	//「視点を下げる」...視点ををもとに戻す
 	kTargetSpeed = 0.5f;
 	enemy_->SetEnemyNumber(enemyNumber);
 	if(input_->PushKey(DIK_1))//仮に[1]を押したとき
@@ -378,7 +379,7 @@ void GameScene::SceneChenge()
 		if (viewProjection_.target.y >= 50)//真上を向いたら、下げるフェーズに移行
 		{
 			upFlag = 0;
-			downFlag = 1;
+			stopFlag = 1;
 #pragma region 敵の選択
 
 			//敵の数が(仮に)3つのため1~3で回す
@@ -392,6 +393,23 @@ void GameScene::SceneChenge()
 #pragma endregion
 		}
 	}
+
+	
+
+
+	if(stopFlag == 1)//視点を止める
+	{
+		float stopTime = 60; //真上で視点を止める時間
+		stopTimer++;
+		if(stopTimer > stopTime)
+		{
+			stopTimer = 0;
+			stopFlag = 0;
+			downFlag = 1;
+		}
+	}
+
+
 	if (viewProjection_.target.y >= 0 && downFlag == 1)//視点を下げる
 	{
 		move = { 0, -kTargetSpeed, +kTargetSpeed };
@@ -403,6 +421,10 @@ void GameScene::SceneChenge()
 		}
 	}
 
+	notesDelete_->SetStopFlag(stopFlag);
+	notesEnd_->SetStopFlag(stopFlag);
+	notesStart_->SetStopFlag(stopFlag);
+	notesHit_->SetStopFlag(stopFlag);
 	//行列の再計算
 	viewProjection_.UpdateMatrix();
 	//デバック用表示
@@ -411,8 +433,7 @@ void GameScene::SceneChenge()
 	
 	//デバック用表示
 	debugText_->SetPos(50, 110);
-	debugText_->Printf("viewProjection_.eye = (%f, %f, %f)",
-		viewProjection_.eye.x, viewProjection_.eye.y, viewProjection_.eye.z);
+	debugText_->Printf("stopFlag:%d",stopFlag);
 	//デバック用表示
 	debugText_->SetPos(50, 130);
 	debugText_->Printf("viewProjection_.terget = (%f, %f, %f)",
@@ -469,15 +490,15 @@ void GameScene::Draw() {
 	
 	
 	//自キャラの描画
-	/*player_->Draw(viewProjection_);
+	player_->Draw(viewProjection_);
 
-	enemy_->Draw(viewProjection_);
+	//enemy_->Draw(viewProjection_);
 
 	notesStart_->Draw(viewProjection_);
 
 	notesEnd_->Draw(viewProjection_);
 
-	notesHit_->Draw(viewProjection_);*/
+	notesHit_->Draw(viewProjection_);
 
 	notesDelete_->Draw(viewProjection_);
 
@@ -500,6 +521,7 @@ void GameScene::Draw() {
 	/// </summary>
 	switch (scene) {
 	case 0:
+
 		title[titlenum]->Draw();
 		break;
 	case 1:
@@ -511,6 +533,7 @@ void GameScene::Draw() {
 	//
 	// スプライト描画後処理
 	Sprite::PostDraw();
+	
 
 #pragma endregion
 	

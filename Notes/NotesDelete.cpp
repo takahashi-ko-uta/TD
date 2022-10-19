@@ -6,7 +6,6 @@
 #include "nameSpace/affinTransformation.h"
 #include <cassert>
 #include <random>
-#define PI 3.141592
 
 void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 	// NULLポインタチェック
@@ -21,9 +20,9 @@ void NotesDelete::Initalize(Model* model, uint32_t textureHandle) {
 
 	//ワールド変換の初期化
 	worldTransforms_.Initialize();
-	//worldTransforms_.translation_ = Vector3(-4.0f, -10.0f, 50.0f);
+	worldTransforms_.translation_ = Vector3(-4.0f, -10.0f, 50.0f);
 	//worldTransforms_.translation_ = Vector3(0.0f, 50.0f, 0.0f);
-	worldTransforms_.translation_ = Vector3(0.0f, 0.0f, 50.0f);
+	//worldTransforms_.translation_ = Vector3(0.0f, 0.0f, 50.0f);
 	worldTransforms_.scale_ = Vector3(2.0f, 1.0f, 1.0f);
 
 	affinTransformation::Transfer(worldTransforms_);
@@ -45,40 +44,49 @@ void NotesDelete::Update() {
 		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);
 }
 
+void NotesDelete::Rotate()
+{
+	float PI = 3.141592;
 
-void NotesDelete::Rotate() {
-	
-	const float R = 90.0f / 50.0f;
-	float rotY = R * rotateY_;
-
-	worldTransforms_.rotation_.x = -rotY * PI /180;
+	if (stopFlag_ == true)
+	{
+		worldTransforms_.rotation_.x = -90 * PI / 180;
+	}
+	else if (stopFlag_ == false)
+	{
+		worldTransforms_.rotation_.x = 0;
+	}
 
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
-
-
-}
-
-void NotesDelete ::SetRotateY(float rotateY)
-{
-	rotateY_ = rotateY;
 }
 
 void NotesDelete::Trans()
 {
-	worldTransforms_.translation_.y = rotateY_;
-	worldTransforms_.translation_.z = -rotateY_ + 50;
+	float x = 50.0f;
+
+	if(stopFlag_ == true)
+	{
+		worldTransforms_.translation_ = Vector3(-4.0f, 50.0f, 10.0f);
+	}
+	else if (stopFlag_ == false)
+	{
+		worldTransforms_.translation_ = Vector3(-4.0f, -10.0f, 50.0f);
+	}
 
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
+
+	debugText_->SetPos(50, 220);
+	debugText_->Printf("stopFlag:%d", stopFlag_);
+
 }
 
-void NotesDelete::SetUpDownFlag(bool upFlag, bool downFlag)
+void NotesDelete::SetStopFlag(bool stopFlag)
 {
-	upFlag_ = upFlag;
-	downFlag_ = downFlag;
+	stopFlag_ = stopFlag;
 }
 
 Vector3 NotesDelete::GetWorldPosition() {

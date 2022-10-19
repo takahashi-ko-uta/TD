@@ -21,6 +21,10 @@ public:
 
 	void Rotate();
 
+	void Trans();
+
+	void SetStopFlag(bool stopFlag);
+
 	Vector3 GetWorldPosition();
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -35,5 +39,6 @@ private:
 	WorldTransform worldTransforms_;
 	uint32_t textureHandle_ = 0;
 
+	bool stopFlag_ = false;
 };
 

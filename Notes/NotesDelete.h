@@ -23,11 +23,9 @@ public:
 
 	void Trans();
 
+	void SetStopFlag(bool stopFlag);
+
 	Vector3 GetWorldPosition();
-
-	void SetRotateY(float rotateY); //カメラと一緒に回したいからiewProjection.terget.yから持ってくる
-
-	void SetUpDownFlag(bool upFlag, bool downFlag);
 
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();
@@ -46,5 +44,5 @@ private:
 
 	bool upFlag_ = false;
 	bool downFlag_ = false;
-
+	bool stopFlag_ = false;
 };

@@ -118,6 +118,14 @@ class Model {
 	/// <returns>メッシュコンテナ</returns>
 	inline const std::vector<Mesh*>& GetMeshes() { return meshes_; }
 
+
+	void SetMaterialParameta(float alpha) {
+		for (auto& m : materials_) {
+			m.second->alpha_ = alpha;	//{1.0f,1.0f,1.0f,alpha};
+			m.second->Update();
+		}
+	}
+
   private: // メンバ変数
 	// 名前
 	std::string name_;
@@ -150,4 +158,6 @@ class Model {
 	/// テクスチャ読み込み
 	/// </summary>
 	void LoadTextures();
+
+
 };

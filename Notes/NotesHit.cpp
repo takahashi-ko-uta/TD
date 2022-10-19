@@ -28,14 +28,55 @@ void NotesHit::Initalize(Model* model, uint32_t textureHandle) {
 void NotesHit::Update() {
 	
 	Rotate(); //旋回処理
+	Trans();
 }
 
 
 void NotesHit::Rotate() {
+	float PI = 3.141592;
+
+	if(stopFlag_ == true)
+	{
+		worldTransforms_.rotation_.x = -90 * PI / 180;
+	}
+	else if(stopFlag_ == false)
+	{
+		worldTransforms_.rotation_.x = 0;
+	}
 	
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
+}
+
+void NotesHit::Trans()
+{
+	float x = 50.0f;
+
+	if (stopFlag_ == true)
+	{
+		worldTransforms_.translation_ = Vector3(0.0f, 50.0f, 10.0f);
+	}
+	else if (stopFlag_ == false)
+	{
+		worldTransforms_.translation_ = Vector3(0.0f, -10.0f, 50.0f);
+	}
+
+	affinTransformation::Transfer(worldTransforms_);
+	//行列更新
+	worldTransforms_.TransferMatrix();
+
+	debugText_->SetPos(50, 220);
+	debugText_->Printf("stopFlag:%d", stopFlag_);
+
+	debugText_->SetPos(50, 250);
+	debugText_->Printf("%f, %f ,%f",
+		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);
+}
+
+void NotesHit::SetStopFlag(bool stopFlag)
+{
+	stopFlag_ = stopFlag;
 }
 
 Vector3 NotesHit::GetWorldPosition() {

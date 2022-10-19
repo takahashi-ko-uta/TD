@@ -117,8 +117,12 @@ class GameScene {
 	//注視点の移動速度
 	float kTargetSpeed = 0.5f;
 
-	uint16_t upFlag = 0;
-	uint16_t downFlag = 0;
+	uint16_t upFlag = 0;	//視点を上げる
+	uint16_t downFlag = 0;	//視点を下げる
+	uint16_t stopFlag = 0;	//視点を止める
+
+	float stopTimer = 0;
+	
 
 	uint16_t enemyNumber = 0;//仮に3まで 敵の選択 0...チュートリアル 
 
@@ -127,7 +131,4 @@ class GameScene {
 
 	float interval = 0;
 	float timer = 0;
-
-	int i;
-	double a;
 };
