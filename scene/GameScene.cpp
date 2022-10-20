@@ -25,6 +25,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+#pragma region テクスチャとサウンドのロード
 	//ファイル名を指定してテクスチャを読み込む
 	textureHandle_PL_ = TextureManager::Load("mario.jpg");
 	textureHandle_EN_ = TextureManager::Load("enemy.jpg");
@@ -33,12 +34,39 @@ void GameScene::Initialize() {
 	//タイトル用テクスチャ
 	titlePic[0] = TextureManager::Load("title1.png");
 	title[0] = Sprite::Create(titlePic[0], { 0, 0 });
-	//サウンドを読み込む
-	soundDataHandle_ = audio_->LoadWave("u002.wav");	//タイトルのBGM
-	soundDataHandle2_ = audio_->LoadWave("mokugyo.wav");//メトロノーム
+	//チュートリアル用テクスチャ
+	textureHandle_Tyu_ = TextureManager::Load("tutorial.png");
+	textureHandle_Clear = TextureManager::Load("Clear.png");
+	textClear = Sprite::Create(textureHandle_Clear, { 850.0f,50.0f });
+	textureHandle_text1 = TextureManager::Load("text1.png");
+	text1 = Sprite::Create(textureHandle_text1, { 850.0f,50.0f });
+	textureHandle_text2 = TextureManager::Load("text2.png");
+	text2 = Sprite::Create(textureHandle_text2, { 850.0f,50.0f });
+	textureHandle_text3 = TextureManager::Load("text3.png");
+	text3 = Sprite::Create(textureHandle_text3, { 850.0f,50.0f });
+	textureHandle_text4 = TextureManager::Load("text4.png");
+	text4 = Sprite::Create(textureHandle_text4, { 850.0f,50.0f });
+	textureHandle_text5 = TextureManager::Load("text5.png");
+	text5 = Sprite::Create(textureHandle_text5, { 850.0f,50.0f });
 
+	//敵の説明
+	textureHandle_Exp1 = TextureManager::Load("tutorial.png");
+	Exp1 = Sprite::Create(textureHandle_Exp1, { 50.0f,50.0f });
+	//サウンドを読み込む
+	soundData_title = audio_->LoadWave("u002.wav");	//タイトルのBGM
+	soundData_tempo = audio_->LoadWave("mokugyo.wav");//メトロノーム
+	soundData_gameBGM120 = audio_->LoadWave("gameBGM_120.wav");
+	//soundData_gameBGM150 = audio_->LoadWave("gameBGM_150.wav");
+
+
+#pragma endregion
 	//モデル生成
 	model_ = Model::Create();
+
+	//modelNum1_ = Model::CreateFromOBJ("num1", true);
+	//modelNum2_ = Model::CreateFromOBJ("num2", true);
+	modelNum3_ = Model::CreateFromOBJ("num3", true);
+
 	//model_->SetMaterialParameta(0.1f);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 		
@@ -66,7 +94,7 @@ void GameScene::Initialize() {
 
 	//敵キャラの生成と初期化
 	enemy_ = new Enemy();
-	enemy_->Initalize(model_);
+	enemy_->Initalize(model_);//, modelNum2_, modelNum3_);
 
 	//ノーツの当たり判定取るやつ生成と初期化
 	notesHit_ = new NotesHit();
@@ -92,9 +120,10 @@ void GameScene::Initialize() {
 	skydome_->Initialize(modelSkydome_);
 #pragma endregion
 
-	bgmHandle_ = audio_->PlayWave(soundDataHandle_, true, 0.1f);
+	bgmHandle_ = audio_->PlayWave(soundData_title, true, 0.1f);
 	//bgmHandle2_ = audio_->PlayWave(soundDataHandle2_, true, 0.1f);
 }
+
 
 void GameScene::Update()
 {
@@ -106,7 +135,7 @@ void GameScene::Update()
 #pragma region タイトル
 	case 0://タイトル
 		
-		audio_->StopWave(soundDataHandle2_);
+		audio_->StopWave(soundData_tempo);
 
 		if (input_->TriggerKey(DIK_SPACE)) {//シーン切り替え
 			scene = 1;
@@ -157,11 +186,12 @@ void GameScene::Update()
 		
 		if (soundkeep == 0)
 		{
-			audio_->StopWave(soundDataHandle_);
+			audio_->PlayWave(soundData_gameBGM120, true, 0.5f);
+			audio_->StopWave(soundData_title);
 			
 			soundkeep = 1;
 		}
-		Metronome(30, soundDataHandle2_);
+		Metronome(30, soundData_tempo);
 
 #pragma endregion
 
@@ -170,7 +200,7 @@ void GameScene::Update()
 
 #pragma region エンディング
 	case 2://エンディング
-		audio_->StopWave(soundDataHandle2_);
+		audio_->StopWave(soundData_tempo);
 
 
 		break;
@@ -360,17 +390,46 @@ void GameScene::TriggerJudge()
 
 void GameScene::SceneChenge()
 {
-	//------「視点を上げる」→「視点を止める」→「視点を下げる」-----//
-	//「視点を上げる」...視点を真上まで上げてEnemyNumberを変える
-	//「視点を止める」...視点を真上の状態で止める(timerで管理)
-	//「視点を下げる」...視点ををもとに戻す
+	
 	kTargetSpeed = 0.5f;
-	enemy_->SetEnemyNumber(enemyNumber);
-	if(input_->PushKey(DIK_1))//仮に[1]を押したとき
+	enemy_->SetEnemyNumber(sceneNumber);
+
+	//if(input_->PushKey(DIK_1))//仮に[1]を押したとき
+	//{
+	//	upFlag = 1;
+	//}
+
+	switch (sceneNumber)
 	{
-		upFlag = 1;
+	case 0:
+		Tutorial();
+		break;
+	case 1:
+
+		break;
+	case 2:
+
+		break;
+	case 3:
+		if (soundStart == 0)
+		{
+			audio_->PlayWave(soundData_gameBGM150, true, 0.5f);
+			audio_->StopWave(soundData_gameBGM120);
+
+			soundStart = 1;
+		}
+		break;
 	}
 
+
+#pragma region 視点を上下してシーンを切り替える
+
+	//------「視点を上げる」→「視点を止める」→「視点を下げる」-----//
+	//「視点を上げる」...視点を真上まで上げてEnemyNumberを変える
+	//「視点を止める」...視点を真上の状態で止める(timerで管理)ここで一度リズム合わせをする
+	//「視点を下げる」...視点ををもとに戻す
+
+#pragma region 視点を上げる
 	if (viewProjection_.target.y <= 90 && upFlag == 1)//視点を上げる
 	{
 		move = { 0, kTargetSpeed, -kTargetSpeed };
@@ -383,33 +442,33 @@ void GameScene::SceneChenge()
 #pragma region 敵の選択
 
 			//敵の数が(仮に)3つのため1~3で回す
-			enemyNumber++;
-			if (enemyNumber == 4)
+			sceneNumber++;
+			if (sceneNumber == 4)
 			{
-				enemyNumber = 1;
+				sceneNumber = 1;
 			}
-			enemy_->SetEnemyNumber(enemyNumber);
+			enemy_->SetEnemyNumber(sceneNumber);
 
 #pragma endregion
 		}
 	}
+#pragma endregion
 
-	
-
-
-	if(stopFlag == 1)//視点を止める
+#pragma region 視点を止める
+	if (stopFlag == 1)//視点を止める
 	{
 		float stopTime = 60; //真上で視点を止める時間
 		stopTimer++;
-		if(stopTimer > stopTime)
+		if (stopTimer > stopTime)
 		{
 			stopTimer = 0;
 			stopFlag = 0;
 			downFlag = 1;
 		}
 	}
+#pragma endregion
 
-
+#pragma region 視点を下げる
 	if (viewProjection_.target.y >= 0 && downFlag == 1)//視点を下げる
 	{
 		move = { 0, -kTargetSpeed, +kTargetSpeed };
@@ -420,26 +479,133 @@ void GameScene::SceneChenge()
 			downFlag = 0;
 		}
 	}
+#pragma endregion
 
+#pragma endregion
+
+	//各クラスにstopFlagを渡す
 	notesDelete_->SetStopFlag(stopFlag);
 	notesEnd_->SetStopFlag(stopFlag);
 	notesStart_->SetStopFlag(stopFlag);
 	notesHit_->SetStopFlag(stopFlag);
+
 	//行列の再計算
 	viewProjection_.UpdateMatrix();
 	//デバック用表示
 	debugText_->SetPos(50, 90);
-	debugText_->Printf("enemyNumber:%d", enemyNumber);
-	
-	//デバック用表示
-	debugText_->SetPos(50, 110);
-	debugText_->Printf("stopFlag:%d",stopFlag);
-	//デバック用表示
-	debugText_->SetPos(50, 130);
-	debugText_->Printf("viewProjection_.terget = (%f, %f, %f)",
-		viewProjection_.target.x, viewProjection_.target.y, viewProjection_.target.z);
+	debugText_->Printf("sceneNumber:%d", sceneNumber);
+}
+
+
+void GameScene::Tutorial()
+{
+	switch (scene_tutorial)
+	{
+	case 0://数秒待つ
+		time_scene0 = 60;
+		timer_tutorial++;
+		if(timer_tutorial > time_scene0)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 1;
+			successResetFlag = 1;
+		}
+		break;
+	case 1:
+		time_scene1 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene1)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 2;
+		}
+		break;
+	case 2:
+		time_scene2 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene2)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 3;
+		}
+		break;
+	case 3:
+		time_scene3 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene3)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 4;
+		}
+		break;
+	case 4:
+		time_scene4 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene4)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 5;
+		}
+		break;
+	case 5://テキスト5を入れる＋10回成功したらscene2へ
+		if(successResetFlag == 1)//一度、成功回数を0へ
+		{
+			judge_success = 0;
+			successResetFlag = 0;
+		}
+
+		if(judge_success >= 10)
+		{
+			scene_tutorial = 6;
+		}
+
+		break;
+	case 6://[クリア]を表示して数秒待つ
+		time_scene6 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene6)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 7;
+		}
+		break;
+	case 7://テキスト2を入れて、数秒まつ
+		time_scene7 = 120;
+		timer_tutorial++;
+		if (timer_tutorial > time_scene7)
+		{
+			timer_tutorial = 0;
+			scene_tutorial = 8;
+		}
+		break;
+
+	case 8://ステージ１へ
+		upFlag = 1;
+		break;
+	}
+
+	debugText_->SetPos(50, 150);
+	debugText_->Printf("scene_tutorial:%d", scene_tutorial);
+	debugText_->SetPos(50, 170);
+	debugText_->Printf("timer_tutorial:%f", timer_tutorial);
 
 }
+
+void GameScene::Stage1()
+{
+
+}
+
+void GameScene::Stage2()
+{
+
+}
+
+void GameScene::Stage3()
+{
+
+}
+
 
 void GameScene::Metronome(float tempo ,uint32_t bgmHandle)
 {
@@ -451,11 +617,12 @@ void GameScene::Metronome(float tempo ,uint32_t bgmHandle)
 		timer--;
 		if (timer <= 0)
 		{
-			audio_->PlayWave(soundDataHandle2_, false, soundLevel);
+			audio_->PlayWave(soundData_tempo, false, soundLevel);
 			timer = interval;
 		}
 	}
 }
+
 
 void GameScene::Draw() {
 	// コマンドリストの取得
@@ -492,7 +659,7 @@ void GameScene::Draw() {
 	//自キャラの描画
 	player_->Draw(viewProjection_);
 
-	//enemy_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
 
 	notesStart_->Draw(viewProjection_);
 
@@ -528,6 +695,39 @@ void GameScene::Draw() {
 
 		break;
 	}
+	if(scene_tutorial == 1)
+	{
+		
+	}
+	else if(scene_tutorial == 2)
+	{
+		
+	}
+	switch (scene_tutorial)
+	{
+	case 1:
+		text1->Draw();
+		break;
+	case 2:
+		text2->Draw();
+		break;
+	case 3:
+		text3->Draw();
+		break;
+	case 4:
+		text4->Draw();
+		break;
+	case 5:
+		text5->Draw();
+		break;
+	case 6:
+		textClear->Draw();
+		break;
+	case 7:
+		Exp1->Draw();
+		break;
+	}
+	
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
 	//

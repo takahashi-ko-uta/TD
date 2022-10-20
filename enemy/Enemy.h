@@ -15,7 +15,7 @@
 
 class Enemy {
 public:
-	void Initalize(Model* model);
+	void Initalize(Model* num1);// , Model* num2, Model* num3);
 
 	void Update();
 
@@ -27,6 +27,9 @@ public:
 	
 private:
 	Model* model_ = nullptr;
+	Model* num1_ = nullptr;
+	Model* num2_ = nullptr;
+	Model* num3_ = nullptr;
 	Input* input_ = nullptr;
 	DebugText* debugText_ = nullptr;
 	WorldTransform worldTransforms_;
@@ -35,6 +38,7 @@ private:
 	uint32_t textureHandle_Num1_ = 0;
 	uint32_t textureHandle_Num2_ = 0;
 	uint32_t textureHandle_Num3_ = 0;
+	uint32_t textureHandle_Tyu_ = 0;
 
 	uint16_t enemyNumber_ = 1;//‰¼‚É3‚Ü‚Å
 	float soundLevel = 0.5f;

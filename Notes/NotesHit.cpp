@@ -66,12 +66,12 @@ void NotesHit::Trans()
 	//s—ñXV
 	worldTransforms_.TransferMatrix();
 
-	debugText_->SetPos(50, 220);
+	/*debugText_->SetPos(50, 220);
 	debugText_->Printf("stopFlag:%d", stopFlag_);
 
 	debugText_->SetPos(50, 250);
 	debugText_->Printf("%f, %f ,%f",
-		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);
+		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);*/
 }
 
 void NotesHit::SetStopFlag(bool stopFlag)

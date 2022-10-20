@@ -48,8 +48,8 @@ void NotesEnd::Trans()
 	//s—ñXV
 	worldTransforms_.TransferMatrix();
 
-	debugText_->SetPos(50, 220);
-	debugText_->Printf("stopFlag:%d", stopFlag_);
+	/*debugText_->SetPos(50, 220);
+	debugText_->Printf("stopFlag:%d", stopFlag_);*/
 
 	/*debugText_->SetPos(50, 250);
 	debugText_->Printf("%f, %f ,%f",

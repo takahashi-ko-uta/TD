@@ -36,12 +36,12 @@ void NotesDelete::Update() {
 	Trans();	//カメラに合わせて移動
 	
 	//デバック用表示
-	debugText_->SetPos(50, 170);
+	/*debugText_->SetPos(50, 170);
 	debugText_->Printf("rotation_.x:%f", worldTransforms_.rotation_.x);
 
 	debugText_->SetPos(50, 190);
 	debugText_->Printf("worldTransforms_.translation_=(%f, %f, %f)",
-		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);
+		worldTransforms_.translation_.x, worldTransforms_.translation_.y, worldTransforms_.translation_.z);*/
 }
 
 void NotesDelete::Rotate()
@@ -78,10 +78,6 @@ void NotesDelete::Trans()
 	affinTransformation::Transfer(worldTransforms_);
 	//行列更新
 	worldTransforms_.TransferMatrix();
-
-	debugText_->SetPos(50, 220);
-	debugText_->Printf("stopFlag:%d", stopFlag_);
-
 }
 
 void NotesDelete::SetStopFlag(bool stopFlag)

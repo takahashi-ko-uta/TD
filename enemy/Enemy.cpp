@@ -8,17 +8,25 @@
 #include <random>
 
 
-void Enemy::Initalize(Model* model) {
+void Enemy::Initalize(Model* num1){//}, Model* num2, Model* num3) {
 	// NULLポインタチェック
-	assert(model);
+	assert(num1);
+	/*assert(num2);
+	assert(num3);*/
 
 	//引数として受け取ってデータをメンバ変数に記録する
-	model_ = model;
+	model_ = num1;
+	num1_ = num1;
+	/*num2_ = num2;
+	num3_ = num3;*/
+
 	textureHandle_ = TextureManager::Load("black.jpg");
 
 	textureHandle_Num1_ = TextureManager::Load("num1.png");
 	textureHandle_Num2_ = TextureManager::Load("num2.png");
 	textureHandle_Num3_ = TextureManager::Load("num3.png");
+	textureHandle_Tyu_ = TextureManager::Load("tutorial.png");
+
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
@@ -85,16 +93,20 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 	switch (enemyNumber_)
 	{
 	case 0://チュートリアル
-		model_->Draw(worldTransforms_, viewProjection, textureHandle_);
+		model_->Draw(worldTransforms_, viewProjection, textureHandle_Tyu_);
+		//num1_->Draw(worldTransforms_, viewProjection);
 		break;
 	case 1://ステージ１
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num1_);
+		//num1_->Draw(worldTransforms_, viewProjection);
 		break;
 	case 2://ステージ２
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num2_);
+		//num2_->Draw(worldTransforms_, viewProjection);
 		break;
 	case 3://ステージ３
 		model_->Draw(worldTransforms_, viewProjection, textureHandle_Num3_);
+		//num3_->Draw(worldTransforms_, viewProjection);
 		break;
 	}
 
